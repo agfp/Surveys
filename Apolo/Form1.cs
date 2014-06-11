@@ -14,5 +14,13 @@ namespace Apolo
         {
             InitializeComponent();
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Database.Open();
+            Form2 frm2 = new Form2();
+            frm2.Owner = this;
+            frm2.Show();
+        }
     }
 }
