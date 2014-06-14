@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Data.SqlServerCe;
+using System.Data;
 
 namespace Apolo
 {
@@ -9,9 +10,21 @@ namespace Apolo
     {
         public static DataSet1.QuestionarioDataTable QuestionarioDT;
         public static DataSet1.PesquisadoresDataTable PesquisadoresDT;
+        public static DataSet ds;
 
-        public static void Open()
+        public static void Open(string path)
         {
+            SqlCeConnection conn = new SqlCeConnection("Data Source = " + path);
+            conn.Open();
+
+            string cmd = "SELECT * FROM Questionario";
+            SqlCeDataAdapter da = new SqlCeDataAdapter(cmd, conn);
+            ds = new DataSet();
+            da.Fill(ds);
+
+            conn.Close();
+
+
             QuestionarioDT = new DataSet1.QuestionarioDataTable();
             DataSet1TableAdapters.QuestionarioTableAdapter qta = new DataSet1TableAdapters.QuestionarioTableAdapter();
             qta.Fill(QuestionarioDT);

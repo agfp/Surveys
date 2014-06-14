@@ -34,8 +34,14 @@ namespace Apolo
             this.lblNomeQuestionario = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.cbbPesquisadores = new System.Windows.Forms.ComboBox();
-            this.btnIniciar = new System.Windows.Forms.Button();
+            this.menuItem1 = new System.Windows.Forms.MenuItem();
+            this.menuItem2 = new System.Windows.Forms.MenuItem();
             this.SuspendLayout();
+            // 
+            // mainMenu1
+            // 
+            this.mainMenu1.MenuItems.Add(this.menuItem1);
+            this.mainMenu1.MenuItems.Add(this.menuItem2);
             // 
             // label1
             // 
@@ -67,14 +73,13 @@ namespace Apolo
             this.cbbPesquisadores.Size = new System.Drawing.Size(233, 22);
             this.cbbPesquisadores.TabIndex = 3;
             // 
-            // btnIniciar
+            // menuItem1
             // 
-            this.btnIniciar.Location = new System.Drawing.Point(165, 245);
-            this.btnIniciar.Name = "btnIniciar";
-            this.btnIniciar.Size = new System.Drawing.Size(72, 20);
-            this.btnIniciar.TabIndex = 4;
-            this.btnIniciar.Text = "Iniciar";
-            this.btnIniciar.Click += new System.EventHandler(this.btnIniciar_Click);
+            this.menuItem1.Text = "Iniciar";
+            // 
+            // menuItem2
+            // 
+            this.menuItem2.Text = "Cancelar";
             // 
             // Form2
             // 
@@ -82,7 +87,6 @@ namespace Apolo
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.AutoScroll = true;
             this.ClientSize = new System.Drawing.Size(240, 268);
-            this.Controls.Add(this.btnIniciar);
             this.Controls.Add(this.cbbPesquisadores);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.lblNomeQuestionario);
@@ -101,6 +105,7 @@ namespace Apolo
         private System.Windows.Forms.Label lblNomeQuestionario;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.ComboBox cbbPesquisadores;
-        private System.Windows.Forms.Button btnIniciar;
+        private System.Windows.Forms.MenuItem menuItem1;
+        private System.Windows.Forms.MenuItem menuItem2;
     }
 }

@@ -31,21 +31,28 @@ namespace Apolo
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.mainMenu1 = new System.Windows.Forms.MainMenu();
-            this.button1 = new System.Windows.Forms.Button();
+            this.menuItem1 = new System.Windows.Forms.MenuItem();
+            this.menuItem2 = new System.Windows.Forms.MenuItem();
             this.label1 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
-            // button1
+            // mainMenu1
             // 
-            this.button1.Location = new System.Drawing.Point(112, 242);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(125, 23);
-            this.button1.TabIndex = 1;
-            this.button1.Text = "Abrir questionário";
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.mainMenu1.MenuItems.Add(this.menuItem1);
+            this.mainMenu1.MenuItems.Add(this.menuItem2);
+            // 
+            // menuItem1
+            // 
+            this.menuItem1.Text = "Abrir";
+            this.menuItem1.Click += new System.EventHandler(this.menuItem1_Click);
+            // 
+            // menuItem2
+            // 
+            this.menuItem2.Text = "Sair";
+            this.menuItem2.Click += new System.EventHandler(this.menuItem2_Click);
             // 
             // label1
             // 
@@ -53,7 +60,7 @@ namespace Apolo
             this.label1.Location = new System.Drawing.Point(92, 34);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(145, 28);
-            this.label1.Text = "APOLO";
+            this.label1.Text = "ZEUS";
             this.label1.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // pictureBox1
@@ -76,7 +83,7 @@ namespace Apolo
             // label3
             // 
             this.label3.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Bold);
-            this.label3.Location = new System.Drawing.Point(3, 135);
+            this.label3.Location = new System.Drawing.Point(3, 153);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(234, 48);
             this.label3.Text = "LETSS - Laboratório de Estudos sobre Trabalho, Sociabilidade e Saúde";
@@ -90,23 +97,23 @@ namespace Apolo
             this.ClientSize = new System.Drawing.Size(240, 268);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.button1);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.label1);
             this.Menu = this.mainMenu1;
             this.Name = "Form1";
-            this.Text = "Apolo - Pesquisa de Campo";
+            this.Text = "Zeus - Pesquisa de Campo";
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.MenuItem menuItem1;
+        private System.Windows.Forms.MenuItem menuItem2;
 
     }
 }
