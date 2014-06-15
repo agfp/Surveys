@@ -1,10 +1,12 @@
-using System;
+﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Text;
+using Zeus.DBAccess;
 
-namespace Apolo
+namespace Zeus.Global
 {
-    static class CurrentSurvey
+    static class Interview
     {
         private static Survey _currentSurvey;
 
@@ -16,6 +18,11 @@ namespace Apolo
         public static Survey Get()
         {
             return _currentSurvey;
+        }
+
+        public static void CreateAnswer()
+        {
+
         }
     }
 }

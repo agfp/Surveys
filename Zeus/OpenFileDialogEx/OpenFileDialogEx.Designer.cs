@@ -48,10 +48,6 @@ namespace MobilePractices.OpenFileDialogEx
             this.fileListView = new System.Windows.Forms.ListView();
             this.FileSystemIcons = new System.Windows.Forms.ImageList();
             this.PathSelectorComboBox = new System.Windows.Forms.ComboBox();
-            this.BottomPanel = new System.Windows.Forms.Panel();
-            this.FilenameTextBox = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.BottomPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // mainMenu1
@@ -79,7 +75,7 @@ namespace MobilePractices.OpenFileDialogEx
             this.fileListView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.fileListView.Location = new System.Drawing.Point(0, 22);
             this.fileListView.Name = "fileListView";
-            this.fileListView.Size = new System.Drawing.Size(240, 206);
+            this.fileListView.Size = new System.Drawing.Size(240, 246);
             this.fileListView.SmallImageList = this.FileSystemIcons;
             this.fileListView.TabIndex = 4;
             this.fileListView.View = System.Windows.Forms.View.SmallIcon;
@@ -100,34 +96,6 @@ namespace MobilePractices.OpenFileDialogEx
             this.PathSelectorComboBox.TabIndex = 5;
             this.PathSelectorComboBox.SelectedIndexChanged += new System.EventHandler(this.PathSelectorComboBox_SelectedIndexChanged);
             // 
-            // BottomPanel
-            // 
-            this.BottomPanel.Controls.Add(this.FilenameTextBox);
-            this.BottomPanel.Controls.Add(this.label1);
-            this.BottomPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.BottomPanel.Location = new System.Drawing.Point(0, 228);
-            this.BottomPanel.Name = "BottomPanel";
-            this.BottomPanel.Size = new System.Drawing.Size(240, 40);
-            // 
-            // FilenameTextBox
-            // 
-            this.FilenameTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.FilenameTextBox.Location = new System.Drawing.Point(0, 19);
-            this.FilenameTextBox.Name = "FilenameTextBox";
-            this.FilenameTextBox.Size = new System.Drawing.Size(240, 21);
-            this.FilenameTextBox.TabIndex = 1;
-            this.FilenameTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.FilenameTextBox_KeyPress);
-            // 
-            // label1
-            // 
-            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.label1.Location = new System.Drawing.Point(0, 2);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(240, 16);
-            this.label1.Text = "Nome do arquivo:";
-            // 
             // OpenFileDialogEx
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -136,14 +104,12 @@ namespace MobilePractices.OpenFileDialogEx
             this.ClientSize = new System.Drawing.Size(240, 268);
             this.ControlBox = false;
             this.Controls.Add(this.fileListView);
-            this.Controls.Add(this.BottomPanel);
             this.Controls.Add(this.PathSelectorComboBox);
             this.KeyPreview = true;
             this.Menu = this.mainMenu1;
             this.MinimizeBox = false;
             this.Name = "OpenFileDialogEx";
             this.Text = "Abrir questionário";
-            this.BottomPanel.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -156,8 +122,5 @@ namespace MobilePractices.OpenFileDialogEx
 		private System.Windows.Forms.MenuItem softKey2Menu;
 		private System.Windows.Forms.MenuItem menuItemCancel;
         private System.Windows.Forms.ComboBox PathSelectorComboBox;
-        private System.Windows.Forms.Panel BottomPanel;
-        private System.Windows.Forms.TextBox FilenameTextBox;
-        private System.Windows.Forms.Label label1;
     }
 }

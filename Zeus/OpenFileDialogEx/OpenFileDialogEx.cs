@@ -60,7 +60,6 @@ namespace MobilePractices.OpenFileDialogEx
             if (Platform.IsWindowsMobileStandard)
             {
                 // Smart phone
-                BottomPanel.Visible = false;
                 PathSelectorComboBox.Visible = false;
 
                 // Remove the cancel option from the right
@@ -70,7 +69,6 @@ namespace MobilePractices.OpenFileDialogEx
             else
             {
                 // Pocket PC
-                BottomPanel.Visible = true;
                 PathSelectorComboBox.Visible = true;
 
                 // Replace the right soft key with a
@@ -342,48 +340,6 @@ namespace MobilePractices.OpenFileDialogEx
 
                 //2) Update the dialog!
                 ChangeDirectory(currentPath);
-            }
-        }
-
-        //We shoud react when the user press ENTER
-        private void FilenameTextBox_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            //When the user press ENTER it could be:
-            // 1. Entering the filename to be attached to the current path
-            // 2. Entering a new full path (starting with '\' )
-            // In both cases it can be a file or a directory, if it's a directory
-            // we need to stay on the dialog but showing that directory
-
-            // This is a risky code because we cannot be sure that the user has entered
-            // a valid path. Try / Catch for any problem with that.
-            if (e.KeyChar == '\r')
-            {
-                try
-                {
-                    string tempPath = FilenameTextBox.Text.Trim(); //Clear white-spaces
-
-                    if (!tempPath.StartsWith("\\"))
-                    {
-                        tempPath = Path.Combine(currentPath, tempPath);
-                    }
-
-                    //Check whether is a file or a directory
-                    if (Directory.Exists(tempPath))
-                    {
-                        //if it's a directory/storagecard
-                        //try to change the current path
-                        FilenameTextBox.Text = "";
-                        ChangeDirectory(tempPath);
-                    }
-                    else if (File.Exists(tempPath))
-                    {
-                        //if it's a file, set the filename and return ok!
-                        fileName = tempPath;
-                        EndOk();
-                    }
-                }
-                catch
-                { }
             }
         }
 	}

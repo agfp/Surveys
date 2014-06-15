@@ -1,4 +1,5 @@
-using System;
+Ôªøusing System;
+using System.Linq;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -6,8 +7,9 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using MobilePractices.OpenFileDialogEx;
+using Zeus.Global;
 
-namespace Apolo
+namespace Zeus
 {
     public partial class Form1 : Form
     {
@@ -25,14 +27,14 @@ namespace Apolo
             {
                 try
                 {
-                    CurrentSurvey.Set(ofd.FileName);
+                    Interview.Set(ofd.FileName);
                     Form2 frm2 = new Form2();
                     frm2.Owner = this;
                     frm2.Show();
                 }
                 catch (Exception)
                 {
-                    MessageBox.Show("N„o foi possÌvel abrir o question·rio especificado", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
+                    MessageBox.Show("N√£o foi poss√≠vel abrir o question√°rio especificado", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
                 }
             }
         }
@@ -41,5 +43,7 @@ namespace Apolo
         {
             this.Close();
         }
+
+
     }
 }
