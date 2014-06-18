@@ -80,6 +80,7 @@ namespace MobilePractices.OpenFileDialogEx
             this.fileListView.TabIndex = 4;
             this.fileListView.View = System.Windows.Forms.View.SmallIcon;
             this.fileListView.ItemActivate += new System.EventHandler(this.fileListView_ItemActivate);
+            this.fileListView.SelectedIndexChanged += new System.EventHandler(this.fileListView_ItemActivate);
             // 
             // FileSystemIcons
             // 

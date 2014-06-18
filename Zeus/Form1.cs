@@ -27,7 +27,7 @@ namespace Zeus
             {
                 try
                 {
-                    Interview.Set(ofd.FileName);
+                    Interview.OpenSurvey(ofd.FileName);
                     Form2 frm2 = new Form2();
                     frm2.Owner = this;
                     frm2.Show();

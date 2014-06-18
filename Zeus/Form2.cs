@@ -20,9 +20,9 @@ namespace Zeus
 
         private void LoadFields()
         {
-            lblNomeQuestionario.Text = Interview.Get().Name;
+            lblNomeQuestionario.Text = Interview.Survey.Name;
             cbbPesquisadores.Items.Clear();
-            foreach (DataRow dr in Interview.Get().Interviewers.Rows)
+            foreach (DataRow dr in Interview.Survey.Interviewers.Rows)
             {
                 cbbPesquisadores.Items.Add(dr["Name"]);
             }
@@ -35,6 +35,10 @@ namespace Zeus
                 MessageBox.Show("Selecione um pesquisador");
                 return;
             }
+            Interview.NewInterview(cbbPesquisadores.SelectedItem.ToString());
+            Form3 frm3 = new Form3();
+            frm3.Owner = this;
+            frm3.Show();
         }
     }
 }
