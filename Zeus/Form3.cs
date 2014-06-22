@@ -53,7 +53,7 @@ namespace Zeus
             var result = MessageBox.Show("Se você continuar a entrevista será perdida. Deseja continuar?", "Aviso", MessageBoxButtons.YesNo, MessageBoxIcon.Hand, MessageBoxDefaultButton.Button2);
             if (result == DialogResult.Yes)
             {
-                Application.Exit();
+                this.Close();
             }
         }
 
@@ -84,11 +84,25 @@ namespace Zeus
             else if (type == 4)
             {
                 var rdb = sender as RadioButton;
-                if (Convert.ToInt32(rdb.Tag) != _checkBoxList.Count)
+                if (Convert.ToInt32(rdb.Tag) != _radioButtonList.Count)
                 {
                     NextQuestion();
                 }
+                else
+                {
+                    _textBox.Focus();
+                }
             }
+        }
+
+        void _textBox_GotFocus(object sender, EventArgs e)
+        {
+            inputPanel1.Enabled = true;
+        }
+
+        void _textBox_LostFocus(object sender, EventArgs e)
+        {
+            inputPanel1.Enabled = false;
         }
 
         #endregion
@@ -138,6 +152,7 @@ namespace Zeus
                 menuItemNextQuestion.Text = "Próximo";
             }
 
+            inputPanel1.Enabled = false;
             progressBar1.Value = _currentIndex + 1;
             lblHeader.Text = String.Format("Pergunta {0} de {1}", _currentIndex + 1, Interview.Survey.NumberOfQuestions);
 
@@ -160,9 +175,11 @@ namespace Zeus
         {
             lblInstructions.Text = "Digite uma resposta:";
             _textBox = new TextBox();
+            _textBox.GotFocus += new EventHandler(_textBox_GotFocus);
+            _textBox.LostFocus += new EventHandler(_textBox_LostFocus);
             _textBox.Width = 200;
             _panel.Controls.Add(_textBox);
-            _panel.Height = _textBox.Bottom + 10;
+            _panel.Height = _textBox.Bottom + 90;
         }
 
         private void LoadType2Panel()
@@ -195,15 +212,18 @@ namespace Zeus
 
             var top = AddRadioButtons();
             var radiobutton = new RadioButton();
+            radiobutton.Click += new EventHandler(option_Click);
             radiobutton.Tag = _radioButtonList.Count + 1;
             radiobutton.Text = "Outro. Especificar:";
             radiobutton.Top = top;
             radiobutton.Width = 200;
             _textBox = new TextBox();
+            _textBox.GotFocus += new EventHandler(_textBox_GotFocus);
+            _textBox.LostFocus += new EventHandler(_textBox_LostFocus);
             _textBox.Width = 200;
             _textBox.Top = radiobutton.Bottom + 5;
             _radioButtonList.Add(radiobutton);
-            _panel.Height = _textBox.Bottom + 10;
+            _panel.Height = _textBox.Bottom + 90;
             _panel.Controls.Add(radiobutton);
             _panel.Controls.Add(_textBox);
         }

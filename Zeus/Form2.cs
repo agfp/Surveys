@@ -15,13 +15,7 @@ namespace Zeus
         public Form2()
         {
             InitializeComponent();
-            //LoadFields();
-
-            Interview.NewInterview("nome teste");
-            Form3 frm3 = new Form3();
-            frm3.Owner = this;
-            frm3.Show();
-
+            LoadFields();
         }
 
         private void LoadFields()
@@ -45,6 +39,11 @@ namespace Zeus
             Form3 frm3 = new Form3();
             frm3.Owner = this;
             frm3.Show();
+        }
+
+        private void menuItem2_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 }
