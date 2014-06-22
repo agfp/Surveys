@@ -25,6 +25,14 @@ namespace Zeus.Global
             get { return _currentSurvey; }
         }
 
+        public static AnswersAccess Answer
+        {
+            get
+            {
+                return _currentAnswers;
+            }
+        }
+
         public static void NewInterview(string interviewer)
         {
             var folder = "\\Zeus";
@@ -53,6 +61,11 @@ namespace Zeus.Global
                 safeName = safeName.Replace(c, '_');
             }
             return safeName;
+        }
+
+        public static void End()
+        {
+            _currentAnswers.Close();
         }
     }
 }

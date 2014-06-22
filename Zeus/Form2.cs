@@ -15,7 +15,13 @@ namespace Zeus
         public Form2()
         {
             InitializeComponent();
-            LoadFields();
+            //LoadFields();
+
+            Interview.NewInterview("nome teste");
+            Form3 frm3 = new Form3();
+            frm3.Owner = this;
+            frm3.Show();
+
         }
 
         private void LoadFields()

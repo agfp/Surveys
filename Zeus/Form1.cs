@@ -34,7 +34,7 @@ namespace Zeus
                 }
                 catch (Exception)
                 {
-                    MessageBox.Show("Não foi possível abrir o questionário especificado", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
+                    MessageBox.Show("Não foi possível abrir o questionário especificado", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Hand, MessageBoxDefaultButton.Button1);
                 }
             }
         }
@@ -43,7 +43,5 @@ namespace Zeus
         {
             this.Close();
         }
-
-
     }
 }

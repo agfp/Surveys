@@ -102,6 +102,7 @@ namespace Zeus.DBAccess
             table = new DataTable();
             SqlCeDataAdapter da = new SqlCeDataAdapter(command, conn);
             da.Fill(table);
+            da.Dispose();
         }
     }
 }

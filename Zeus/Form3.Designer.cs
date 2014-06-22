@@ -29,40 +29,46 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.mainMenu1 = new System.Windows.Forms.MainMenu();
             this.menuItem1 = new System.Windows.Forms.MenuItem();
-            this.menuItem2 = new System.Windows.Forms.MenuItem();
-            this.menuItem6 = new System.Windows.Forms.MenuItem();
-            this.menuItem5 = new System.Windows.Forms.MenuItem();
+            this.menuItemPreviousQuestion = new System.Windows.Forms.MenuItem();
+            this.menuItemAbort = new System.Windows.Forms.MenuItem();
+            this.menuItemNextQuestion = new System.Windows.Forms.MenuItem();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.lblHeader = new System.Windows.Forms.Label();
             this.lblQuestion = new System.Windows.Forms.Label();
             this.lblInstructions = new System.Windows.Forms.Label();
+            this.inputPanel1 = new Microsoft.WindowsCE.Forms.InputPanel(this.components);
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.SuspendLayout();
             // 
             // mainMenu1
             // 
             this.mainMenu1.MenuItems.Add(this.menuItem1);
-            this.mainMenu1.MenuItems.Add(this.menuItem5);
+            this.mainMenu1.MenuItems.Add(this.menuItemNextQuestion);
             // 
             // menuItem1
             // 
-            this.menuItem1.MenuItems.Add(this.menuItem2);
-            this.menuItem1.MenuItems.Add(this.menuItem6);
+            this.menuItem1.MenuItems.Add(this.menuItemPreviousQuestion);
+            this.menuItem1.MenuItems.Add(this.menuItemAbort);
             this.menuItem1.Text = "Menu";
             // 
-            // menuItem2
+            // menuItemPreviousQuestion
             // 
-            this.menuItem2.Text = "Anterior";
+            this.menuItemPreviousQuestion.Text = "Anterior";
+            this.menuItemPreviousQuestion.Click += new System.EventHandler(this.menuItemPreviousQuestion_Click);
             // 
-            // menuItem6
+            // menuItemAbort
             // 
-            this.menuItem6.Text = "Abortar";
+            this.menuItemAbort.Text = "Abortar";
+            this.menuItemAbort.Click += new System.EventHandler(this.menuItemAbort_Click);
             // 
-            // menuItem5
+            // menuItemNextQuestion
             // 
-            this.menuItem5.Text = "Próximo";
-            this.menuItem5.Click += new System.EventHandler(this.menuItem5_Click);
+            this.menuItemNextQuestion.Text = "Próximo";
+            this.menuItemNextQuestion.Click += new System.EventHandler(this.menuItemNextQuestion_Click);
             // 
             // progressBar1
             // 
@@ -95,6 +101,19 @@
             this.lblInstructions.Size = new System.Drawing.Size(221, 20);
             this.lblInstructions.Text = "Instruções de preenchimento";
             // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(0, 0);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(100, 21);
+            this.textBox1.TabIndex = 4;
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Location = new System.Drawing.Point(0, 0);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(144, 50);
+            // 
             // Form3
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -103,9 +122,11 @@
             this.ClientSize = new System.Drawing.Size(240, 268);
             this.ControlBox = false;
             this.Controls.Add(this.lblInstructions);
-            this.Controls.Add(this.lblQuestion);
             this.Controls.Add(this.lblHeader);
             this.Controls.Add(this.progressBar1);
+            this.Controls.Add(this.lblQuestion);
+            this.Controls.Add(this.pictureBox1);
+            this.Controls.Add(this.textBox1);
             this.Menu = this.mainMenu1;
             this.Name = "Form3";
             this.Text = "Entrevista";
@@ -116,12 +137,15 @@
         #endregion
 
         private System.Windows.Forms.MenuItem menuItem1;
-        private System.Windows.Forms.MenuItem menuItem2;
-        private System.Windows.Forms.MenuItem menuItem5;
+        private System.Windows.Forms.MenuItem menuItemPreviousQuestion;
+        private System.Windows.Forms.MenuItem menuItemNextQuestion;
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.Label lblHeader;
         private System.Windows.Forms.Label lblQuestion;
         private System.Windows.Forms.Label lblInstructions;
-        private System.Windows.Forms.MenuItem menuItem6;
+        private System.Windows.Forms.MenuItem menuItemAbort;
+        private Microsoft.WindowsCE.Forms.InputPanel inputPanel1;
+        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.PictureBox pictureBox1;
     }
 }
