@@ -5,11 +5,13 @@ using System.Text;
 using System.IO;
 using System.Data.SqlServerCe;
 using System.Data;
+using Zeus.Global;
 
 namespace Zeus.DBAccess
 {
     class AnswersAccess
     {
+        public int LastSaved;
         private string _connectionString;
         private string _interviewId;
 
@@ -30,8 +32,10 @@ namespace Zeus.DBAccess
             }
         }
 
-        public void Save(int questionId, int[] closeEnded, string openEnded)
+        public void Save(int index, int[] closeEnded, string openEnded)
         {
+            var questionId = Convert.ToInt32(Interview.Survey.Questions.Rows[index]["Id"]);
+
             using (SqlCeConnection conn = new SqlCeConnection(_connectionString))
             {
                 conn.Open();
@@ -52,6 +56,10 @@ namespace Zeus.DBAccess
 
                     cmd2.ExecuteNonQuery();
                 }
+            }
+            if (LastSaved < index)
+            {
+                LastSaved = index;
             }
         }
 

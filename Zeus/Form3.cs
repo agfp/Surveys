@@ -36,6 +36,13 @@ namespace Zeus
 
         #region Events
 
+        private void menuItemGoTo_Click(object sender, EventArgs e)
+        {
+            Form4 frm = new Form4();
+            frm.Owner = this;
+            frm.Show();
+        }
+
         private void menuItemNextQuestion_Click(object sender, EventArgs e)
         {
             NextQuestion();
@@ -59,6 +66,11 @@ namespace Zeus
 
         private void option_Click(object sender, EventArgs e)
         {
+            if (_currentIndex == Interview.Survey.Questions.Rows.Count - 1)
+            {
+                return;
+            }
+
             var type = Convert.ToInt16(Interview.Survey.Questions.Rows[_currentIndex]["Type"]);
             if (type == 2)
             {
@@ -95,14 +107,25 @@ namespace Zeus
             }
         }
 
-        void _textBox_GotFocus(object sender, EventArgs e)
+        private void _textBox_GotFocus(object sender, EventArgs e)
         {
             inputPanel1.Enabled = true;
         }
 
-        void _textBox_LostFocus(object sender, EventArgs e)
+        private void _textBox_LostFocus(object sender, EventArgs e)
         {
             inputPanel1.Enabled = false;
+        }
+
+        private void Form3_GotFocus(object sender, EventArgs e)
+        {
+            if (Navigation.GoTo > 0)
+            {
+                _currentIndex = Navigation.GoTo;
+                Navigation.GoTo = -1;
+                _panel.Dispose();
+                LoadQuestion();
+            }
         }
 
         #endregion
@@ -151,7 +174,9 @@ namespace Zeus
             {
                 menuItemNextQuestion.Text = "Próximo";
             }
-
+            
+            menuItemPreviousQuestion.Enabled = _currentIndex > 0;
+            menuItemGoTo.Enabled = _currentIndex > 0; 
             inputPanel1.Enabled = false;
             progressBar1.Value = _currentIndex + 1;
             lblHeader.Text = String.Format("Pergunta {0} de {1}", _currentIndex + 1, Interview.Survey.NumberOfQuestions);
@@ -163,34 +188,34 @@ namespace Zeus
             lblQuestion.Width = this.Width - 18;
             lblQuestion.Height = CFMeasureString.MeasureString(lblQuestion, lblQuestion.Text, lblQuestion.ClientRectangle).Height;
             lblInstructions.Top = lblQuestion.Bottom + 10;
-
+            lblDbInstruction.Top = lblInstructions.Top + 20;
+            
             _panel = new Panel();
-            _panel.Top = lblInstructions.Bottom + 5;
+            _panel.Top = lblDbInstruction.Top;
             _panel.Width = this.Width - 18;
             _panel.Left = 3;
+
+            if (!String.IsNullOrEmpty(Interview.Survey.Questions.Rows[_currentIndex]["Instruction"].ToString()))
+            {
+                lblDbInstruction.Text = Interview.Survey.Questions.Rows[_currentIndex]["Instruction"].ToString();
+                _panel.Top = lblDbInstruction.Top + 20;
+                lblDbInstruction.Show();
+            }
+            else
+            {
+                lblDbInstruction.Hide();
+                _panel.Top = lblDbInstruction.Top;
+            }
             this.Controls.Add(_panel);
         }
 
         private void LoadType1Panel()
         {
             lblInstructions.Text = "Digite uma resposta:";
-            var top = 0;
-
-            if (!String.IsNullOrEmpty(Interview.Survey.Questions.Rows[_currentIndex]["Instruction"].ToString()))
-            {
-                var lblDbInstruction = new Label();
-                lblDbInstruction.ForeColor = Color.Maroon;
-                lblDbInstruction.Font = (Font)lblInstructions.Font.Clone();
-                lblDbInstruction.Width = lblInstructions.Width;
-                lblDbInstruction.Text = Interview.Survey.Questions.Rows[_currentIndex]["Instruction"].ToString();
-                _panel.Controls.Add(lblDbInstruction);
-                top = 20;
-            }
             _textBox = new TextBox();
             _textBox.GotFocus += new EventHandler(_textBox_GotFocus);
             _textBox.LostFocus += new EventHandler(_textBox_LostFocus);
             _textBox.Width = 200;
-            _textBox.Top = top;
             _panel.Controls.Add(_textBox);
             _panel.Height = _textBox.Bottom + 90;
         }
@@ -299,7 +324,7 @@ namespace Zeus
                 }
                 else
                 {
-                    Interview.Answer.Save(_currentQuestionId, new int[] { 0 }, answer);
+                    Interview.Answer.Save(_currentIndex, new int[] { 0 }, answer);
                     return true;
                 }
             }
@@ -316,11 +341,15 @@ namespace Zeus
                 }
                 else
                 {
-                    var confirm = String.Format("Você selecionou apenas {0} resposta(s) de {1} possíveis respostas. Tem certeza que deseja prosseguir?", selectedAnswers.Count(), numAnswers);
-                    var result = MessageBox.Show(confirm, "Pergunta", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
-                    if (result == DialogResult.Yes)
+                    DialogResult result = DialogResult.None;
+                    if (selectedAnswers.Count() < numAnswers)
                     {
-                        Interview.Answer.Save(_currentQuestionId, selectedAnswers.ToArray(), String.Empty);
+                        var confirm = String.Format("Você selecionou apenas {0} resposta(s) de {1} possíveis respostas. Tem certeza que deseja prosseguir?", selectedAnswers.Count(), numAnswers);
+                        result = MessageBox.Show(confirm, "Pergunta", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
+                    }
+                    if (result == DialogResult.None || result == DialogResult.Yes)
+                    {
+                        Interview.Answer.Save(_currentIndex, selectedAnswers.ToArray(), String.Empty);
                         return true;
                     }
                     else
@@ -346,7 +375,7 @@ namespace Zeus
                 }
                 else
                 {
-                    Interview.Answer.Save(_currentQuestionId, closeEnded.ToArray(), openEnded);
+                    Interview.Answer.Save(_currentIndex, closeEnded.ToArray(), openEnded);
                     return true;
                 }
             }
@@ -400,6 +429,10 @@ namespace Zeus
         }
 
         #endregion
+
+
+
+
 
     }
 }

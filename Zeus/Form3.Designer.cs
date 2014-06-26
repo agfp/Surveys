@@ -32,6 +32,7 @@
             this.components = new System.ComponentModel.Container();
             this.mainMenu1 = new System.Windows.Forms.MainMenu();
             this.menuItem1 = new System.Windows.Forms.MenuItem();
+            this.menuItemGoTo = new System.Windows.Forms.MenuItem();
             this.menuItemPreviousQuestion = new System.Windows.Forms.MenuItem();
             this.menuItemAbort = new System.Windows.Forms.MenuItem();
             this.menuItemNextQuestion = new System.Windows.Forms.MenuItem();
@@ -42,6 +43,7 @@
             this.inputPanel1 = new Microsoft.WindowsCE.Forms.InputPanel(this.components);
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.lblDbInstruction = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // mainMenu1
@@ -51,9 +53,15 @@
             // 
             // menuItem1
             // 
+            this.menuItem1.MenuItems.Add(this.menuItemGoTo);
             this.menuItem1.MenuItems.Add(this.menuItemPreviousQuestion);
             this.menuItem1.MenuItems.Add(this.menuItemAbort);
             this.menuItem1.Text = "Menu";
+            // 
+            // menuItemGoTo
+            // 
+            this.menuItemGoTo.Text = "Ir para...";
+            this.menuItemGoTo.Click += new System.EventHandler(this.menuItemGoTo_Click);
             // 
             // menuItemPreviousQuestion
             // 
@@ -99,7 +107,7 @@
             this.lblInstructions.Location = new System.Drawing.Point(3, 90);
             this.lblInstructions.Name = "lblInstructions";
             this.lblInstructions.Size = new System.Drawing.Size(221, 20);
-            this.lblInstructions.Text = "Instruções de preenchimento";
+            this.lblInstructions.Text = "Instrução padrão";
             // 
             // textBox1
             // 
@@ -114,6 +122,15 @@
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(144, 50);
             // 
+            // lblDbInstruction
+            // 
+            this.lblDbInstruction.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Bold);
+            this.lblDbInstruction.ForeColor = System.Drawing.Color.DarkRed;
+            this.lblDbInstruction.Location = new System.Drawing.Point(3, 110);
+            this.lblDbInstruction.Name = "lblDbInstruction";
+            this.lblDbInstruction.Size = new System.Drawing.Size(221, 20);
+            this.lblDbInstruction.Text = "Instrução personalizada";
+            // 
             // Form3
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -121,6 +138,7 @@
             this.AutoScroll = true;
             this.ClientSize = new System.Drawing.Size(240, 268);
             this.ControlBox = false;
+            this.Controls.Add(this.lblDbInstruction);
             this.Controls.Add(this.lblInstructions);
             this.Controls.Add(this.lblHeader);
             this.Controls.Add(this.progressBar1);
@@ -130,6 +148,7 @@
             this.Menu = this.mainMenu1;
             this.Name = "Form3";
             this.Text = "Entrevista";
+            this.GotFocus += new System.EventHandler(this.Form3_GotFocus);
             this.ResumeLayout(false);
 
         }
@@ -147,5 +166,7 @@
         private Microsoft.WindowsCE.Forms.InputPanel inputPanel1;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.Label lblDbInstruction;
+        private System.Windows.Forms.MenuItem menuItemGoTo;
     }
 }
