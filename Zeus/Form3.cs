@@ -174,10 +174,23 @@ namespace Zeus
         private void LoadType1Panel()
         {
             lblInstructions.Text = "Digite uma resposta:";
+            var top = 0;
+
+            if (!String.IsNullOrEmpty(Interview.Survey.Questions.Rows[_currentIndex]["Instruction"].ToString()))
+            {
+                var lblDbInstruction = new Label();
+                lblDbInstruction.ForeColor = Color.Maroon;
+                lblDbInstruction.Font = (Font)lblInstructions.Font.Clone();
+                lblDbInstruction.Width = lblInstructions.Width;
+                lblDbInstruction.Text = Interview.Survey.Questions.Rows[_currentIndex]["Instruction"].ToString();
+                _panel.Controls.Add(lblDbInstruction);
+                top = 20;
+            }
             _textBox = new TextBox();
             _textBox.GotFocus += new EventHandler(_textBox_GotFocus);
             _textBox.LostFocus += new EventHandler(_textBox_LostFocus);
             _textBox.Width = 200;
+            _textBox.Top = top;
             _panel.Controls.Add(_textBox);
             _panel.Height = _textBox.Bottom + 90;
         }
@@ -185,7 +198,7 @@ namespace Zeus
         private void LoadType2Panel()
         {
             var numAnswers = Interview.Survey.Questions.Rows[_currentIndex]["NumAnswers"];
-            lblInstructions.Text = "Selecione " + numAnswers.ToString() + " opções:";
+            lblInstructions.Text = "Selecione até " + numAnswers.ToString() + " opções:";
 
             var filter = "Question_Id = " + _currentQuestionId;
             var options = Interview.Survey.Options.Select(filter);
@@ -297,14 +310,23 @@ namespace Zeus
                                       where c.Checked == true
                                       select Convert.ToInt32(c.Tag);
 
-                if (selectedAnswers.Count() != numAnswers)
+                if (selectedAnswers.Count() > numAnswers)
                 {
                     message = String.Format("Você selecionou {0} resposta(s). Por favor selecione {1} respostas.", selectedAnswers.Count(), numAnswers);
                 }
                 else
                 {
-                    Interview.Answer.Save(_currentQuestionId, selectedAnswers.ToArray(), String.Empty);
-                    return true;
+                    var confirm = String.Format("Você selecionou apenas {0} resposta(s) de {1} possíveis respostas. Tem certeza que deseja prosseguir?", selectedAnswers.Count(), numAnswers);
+                    var result = MessageBox.Show(confirm, "Pergunta", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
+                    if (result == DialogResult.Yes)
+                    {
+                        Interview.Answer.Save(_currentQuestionId, selectedAnswers.ToArray(), String.Empty);
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
                 }
             }
             else
@@ -373,7 +395,7 @@ namespace Zeus
         private void EndInterview()
         {
             Interview.End();
-            MessageBox.Show("Entrevista finalizada.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Asterisk, MessageBoxDefaultButton.Button1);
+            MessageBox.Show("Entrevista concluída.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Asterisk, MessageBoxDefaultButton.Button1);
             this.Close();
         }
 

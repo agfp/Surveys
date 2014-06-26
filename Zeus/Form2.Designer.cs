@@ -29,12 +29,14 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.mainMenu1 = new System.Windows.Forms.MainMenu();
             this.menuItem1 = new System.Windows.Forms.MenuItem();
             this.menuItem2 = new System.Windows.Forms.MenuItem();
             this.lblNomeQuestionario = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.cbbPesquisadores = new System.Windows.Forms.ComboBox();
+            this.inputPanel1 = new Microsoft.WindowsCE.Forms.InputPanel(this.components);
             this.SuspendLayout();
             // 
             // mainMenu1
@@ -66,7 +68,7 @@
             this.label1.Location = new System.Drawing.Point(3, 67);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(100, 20);
-            this.label1.Text = "Pesquisador:";
+            this.label1.Text = "Aplicador:";
             // 
             // cbbPesquisadores
             // 
@@ -81,10 +83,12 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.AutoScroll = true;
             this.ClientSize = new System.Drawing.Size(240, 268);
+            this.ControlBox = false;
             this.Controls.Add(this.cbbPesquisadores);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.lblNomeQuestionario);
             this.Menu = this.mainMenu1;
+            this.MinimizeBox = false;
             this.Name = "Form2";
             this.Text = "Zeus";
             this.ResumeLayout(false);
@@ -98,5 +102,6 @@
         private System.Windows.Forms.Label lblNomeQuestionario;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ComboBox cbbPesquisadores;
+        private Microsoft.WindowsCE.Forms.InputPanel inputPanel1;
     }
 }

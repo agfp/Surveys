@@ -26,6 +26,7 @@ namespace Zeus
             {
                 cbbPesquisadores.Items.Add(dr["Name"]);
             }
+            inputPanel1.Enabled = false;
         }
 
         private void menuItem1_Click(object sender, EventArgs e)
@@ -35,7 +36,12 @@ namespace Zeus
                 MessageBox.Show("Selecione um pesquisador");
                 return;
             }
-            Interview.NewInterview(cbbPesquisadores.SelectedItem.ToString());
+
+            var interviwerId = (from o in Interview.Survey.Interviewers.AsEnumerable()
+                                where o.Field<string>("Name") == cbbPesquisadores.SelectedItem.ToString()
+                                select o.Field<int>("Id")).First();
+
+            Interview.NewInterview(interviwerId);
             Form3 frm3 = new Form3();
             frm3.Owner = this;
             frm3.Show();

@@ -13,15 +13,15 @@ namespace Zeus.DBAccess
         private string _connectionString;
         private string _interviewId;
 
-        public AnswersAccess(string dbpath, string interviewer)
+        public AnswersAccess(string dbpath, int interviewerId)
         {
             _connectionString = "Data Source = " + dbpath;
             using (SqlCeConnection conn = new SqlCeConnection(_connectionString))
             {
                 conn.Open();
-                var cmd1 = "INSERT INTO Interview(Interviewer, StartTime) VALUES ('{0}', '{1}')";
+                var cmd1 = "INSERT INTO Interview(Interviewer_Id, StartTime) VALUES ({0}, '{1}')";
                 var cmd2 = "SELECT @@IDENTITY";
-                cmd1 = String.Format(cmd1, interviewer, DateTime.Now.ToString("s"));
+                cmd1 = String.Format(cmd1, interviewerId, DateTime.Now.ToString("s"));
 
                 var cmd = new SqlCeCommand(cmd1, conn);
                 cmd.ExecuteNonQuery();

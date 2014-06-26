@@ -33,10 +33,10 @@ namespace Zeus.Global
             }
         }
 
-        public static void NewInterview(string interviewer)
+        public static void NewInterview(int interviewerId)
         {
-            var folder = "\\Zeus";
-            var filename = GetSafeFileName(Survey.Name + "-Respostas-" + DateTime.Now.ToString("yyyy-MM-dd") + ".sdf");
+            var folder = "\\Zeus\\Entrevistas";
+            var filename = GetSafeFileName(Survey.Name + DateTime.Now.ToString("yyyy-MM-dd") + ".sdf");
             var fullname = Path.Combine(folder, filename);
 
             if (!Directory.Exists(folder))
@@ -48,7 +48,7 @@ namespace Zeus.Global
                 File.Copy(_surveyDbPath, fullname);
             }
             _interviewDbPath = fullname;
-            _currentAnswers = new AnswersAccess(_interviewDbPath, interviewer);
+            _currentAnswers = new AnswersAccess(_interviewDbPath, interviewerId);
 
         }
 
