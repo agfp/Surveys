@@ -20,6 +20,11 @@ namespace Zeus
 
         private void menuItem1_Click(object sender, EventArgs e)
         {
+            this.Close();
+        }
+
+        private void menuItem2_Click(object sender, EventArgs e)
+        {
             OpenFileDialogEx ofd = new OpenFileDialogEx();
             ofd.Filter = "*.sdf";
 
@@ -38,11 +43,6 @@ namespace Zeus
                     MessageBox.Show("Não foi possível abrir o questionário especificado", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Hand, MessageBoxDefaultButton.Button1);
                 }
             }
-        }
-
-        private void menuItem2_Click(object sender, EventArgs e)
-        {
-            this.Close();
         }
     }
 }

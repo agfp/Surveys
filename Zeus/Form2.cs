@@ -31,6 +31,11 @@ namespace Zeus
 
         private void menuItem1_Click(object sender, EventArgs e)
         {
+            this.Close();
+        }
+
+        private void menuItem2_Click(object sender, EventArgs e)
+        {
             if (cbbPesquisadores.SelectedIndex == -1)
             {
                 MessageBox.Show("Selecione um pesquisador");
@@ -45,11 +50,6 @@ namespace Zeus
             Form3 frm3 = new Form3();
             frm3.Owner = this;
             frm3.Show();
-        }
-
-        private void menuItem2_Click(object sender, EventArgs e)
-        {
-            this.Close();
         }
     }
 }

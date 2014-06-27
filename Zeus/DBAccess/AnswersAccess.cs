@@ -88,12 +88,96 @@ namespace Zeus.DBAccess
                 var cmd = String.Format("SELECT * FROM Answers WHERE Interview_Id = {0} AND Question_Id = {1}",
                         _interviewId, questionId);
 
-                SqlCeDataAdapter da = new SqlCeDataAdapter(cmd, conn);
+                var da = new SqlCeDataAdapter(cmd, conn);
                 da.Fill(table);
                 da.Dispose();
 
                 return table;
             }
+        }
+
+        public string ConvertToText()
+        {
+            var export = new StringBuilder();
+            var answersDT = GetQuestionsAndAnswersTable();
+
+            var questions = (from o in answersDT.AsEnumerable()
+                             orderby o.Field<Int16>("Order")
+                             select new
+                             {
+                                 Id = o.Field<int>("Question_Id"),
+                                 Type = o.Field<byte>("Type"),
+                                 NumAnswers = o.Field<byte?>("NumAnswers")
+                             }
+                            ).Distinct();
+
+            foreach (var question in questions)
+            {
+                var answer = from o in answersDT.AsEnumerable()
+                             where o.Field<int>("Question_Id") == question.Id
+                             select new
+                             {
+                                 CloseEnded = o.Field<byte?>("CloseEnded"),
+                                 OpenEnded = o.Field<string>("OpenEnded")
+                             };
+
+                switch (question.Type)
+                {
+                    case 1:
+                        export.Append(answer.ElementAt(0).OpenEnded);
+                        break;
+
+                    case 2:
+                        var unfilled = question.NumAnswers - answer.Count();
+                        foreach (var option in answer)
+                        {
+                            export.Append(option.CloseEnded);
+                            export.Append(";");
+                        }
+                        for (int i = 0; i < unfilled; i++)
+                        {
+                            export.Append(-1);
+                            export.Append(";");
+                        }
+                        export.Remove(export.Length - 1, 1);
+                        break;
+
+                    case 3:
+                        export.Append(answer.ElementAt(0).CloseEnded);
+                        break;
+
+                    case 4:
+                        export.Append(answer.ElementAt(0).CloseEnded);
+                        export.Append(";");
+                        export.Append(answer.ElementAt(0).OpenEnded);
+                        break;
+                }
+                export.Append(";");
+            }
+            export.Remove(export.Length - 1, 1);
+            return export.ToString();
+        }
+
+        private DataTable GetQuestionsAndAnswersTable()
+        {
+            var answersDT = new DataTable();
+            using (SqlCeConnection conn = new SqlCeConnection(_connectionString))
+            {
+                conn.Open();
+                var query = @"
+                    SELECT [Questions].[Type], [Questions].[Order], [Questions].[NumAnswers], [Answers].[OpenEnded], [Answers].[CloseEnded], [Answers].[Question_Id]
+                    FROM Answers 
+                      INNER JOIN [Questions] 
+                        ON [Answers].[Question_Id] = [Questions].[Id] 
+                    WHERE [Interview_Id] = {0}";
+
+                var cmd = String.Format(query, _interviewId);
+
+                var da = new SqlCeDataAdapter(cmd, conn);
+                da.Fill(answersDT);
+                da.Dispose();
+            }
+            return answersDT;
         }
     }
 }

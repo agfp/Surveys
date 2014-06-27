@@ -46,12 +46,12 @@
             // 
             // menuItem1
             // 
-            this.menuItem1.Text = "Iniciar";
+            this.menuItem1.Text = "Cancelar";
             this.menuItem1.Click += new System.EventHandler(this.menuItem1_Click);
             // 
             // menuItem2
             // 
-            this.menuItem2.Text = "Cancelar";
+            this.menuItem2.Text = "Iniciar";
             this.menuItem2.Click += new System.EventHandler(this.menuItem2_Click);
             // 
             // lblNomeQuestionario

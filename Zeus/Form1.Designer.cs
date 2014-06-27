@@ -43,12 +43,12 @@
             // 
             // menuItem1
             // 
-            this.menuItem1.Text = "Abrir";
+            this.menuItem1.Text = "Sair";
             this.menuItem1.Click += new System.EventHandler(this.menuItem1_Click);
             // 
             // menuItem2
             // 
-            this.menuItem2.Text = "Sair";
+            this.menuItem2.Text = "Abrir";
             this.menuItem2.Click += new System.EventHandler(this.menuItem2_Click);
             // 
             // pictureBox1

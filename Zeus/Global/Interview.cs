@@ -35,8 +35,8 @@ namespace Zeus.Global
 
         public static void NewInterview(int interviewerId)
         {
-            var folder = "\\Zeus\\Entrevistas";
-            var filename = GetSafeFileName(Survey.Name + DateTime.Now.ToString("yyyy-MM-dd") + ".sdf");
+            var folder = "\\Zeus\\Respostas";
+            var filename = Utils.GetSafeFileName(Survey.Name + DateTime.Now.ToString("yyyy-MM-dd") + ".zeus");
             var fullname = Path.Combine(folder, filename);
 
             if (!Directory.Exists(folder))
@@ -52,20 +52,10 @@ namespace Zeus.Global
 
         }
 
-        private static string GetSafeFileName(string filename)
-        {
-            char[] forbidden = { ' ', '<', '>', ':', '\"', '/', '\\', '|', '?', '*' };
-            string safeName = filename;
-            foreach (char c in forbidden)
-            {
-                safeName = safeName.Replace(c, '_');
-            }
-            return safeName;
-        }
-
         public static void End()
         {
             _currentAnswers.Close();
+            Export.ToText();
         }
     }
 }
