@@ -21,14 +21,18 @@ namespace Zeus.DBAccess
             using (SqlCeConnection conn = new SqlCeConnection(_connectionString))
             {
                 conn.Open();
-                var cmd1 = "INSERT INTO Interview(Interviewer_Id, StartTime) VALUES ({0}, '{1}')";
-                var cmd2 = "SELECT @@IDENTITY";
-                cmd1 = String.Format(cmd1, interviewerId, DateTime.Now.ToString("s"));
 
-                var cmd = new SqlCeCommand(cmd1, conn);
-                cmd.ExecuteNonQuery();
-                cmd = new SqlCeCommand(cmd2, conn);
-                _interviewId = cmd.ExecuteScalar().ToString();
+                var cmd1 = conn.CreateCommand();
+                cmd1.CommandText = "INSERT INTO Interview(Interviewer_Id, StartTime) VALUES (@InterviewerId, @StartTime)";
+                cmd1.Parameters.Add(new SqlCeParameter("@InterviewerId", interviewerId));
+                cmd1.Parameters.Add(new SqlCeParameter("@StartTime", DateTime.Now.ToString("s")));
+                cmd1.Prepare();
+                cmd1.ExecuteNonQuery();
+
+                var cmd2 = conn.CreateCommand();
+                cmd2.CommandText = "SELECT @@IDENTITY";
+                cmd2.Prepare();
+                _interviewId = cmd2.ExecuteScalar().ToString();
             }
         }
 
@@ -40,20 +44,22 @@ namespace Zeus.DBAccess
             {
                 conn.Open();
 
-                var cmd1 = new SqlCeCommand(
-                    String.Format("DELETE FROM Answers WHERE Interview_Id = {0} AND Question_Id = {1}",
-                        _interviewId, questionId),
-                    conn);
-
+                var cmd1 = conn.CreateCommand();
+                cmd1.CommandText = "DELETE FROM Answers WHERE Interview_Id = @InterviewId AND Question_Id = @QuestionId";
+                cmd1.Parameters.Add(new SqlCeParameter("@InterviewId", _interviewId));
+                cmd1.Parameters.Add(new SqlCeParameter("@QuestionId", questionId));
+                cmd1.Prepare();
                 cmd1.ExecuteNonQuery();
 
                 foreach (var answer in closeEnded)
                 {
-                    var cmd2 = new SqlCeCommand(
-                        String.Format("INSERT INTO Answers(Interview_Id, Question_Id, CloseEnded, OpenEnded) VALUES ('{0}', '{1}', '{2}', '{3}')",
-                            _interviewId, questionId, answer, openEnded),
-                        conn);
-
+                    var cmd2 = conn.CreateCommand();
+                    cmd2.CommandText = "INSERT INTO Answers(Interview_Id, Question_Id, CloseEnded, OpenEnded) VALUES (@InterviewId, @QuestionId, @CloseEnded, @OpenEnded)";
+                    cmd2.Parameters.Add(new SqlCeParameter("@InterviewId", _interviewId));
+                    cmd2.Parameters.Add(new SqlCeParameter("@QuestionId", questionId));
+                    cmd2.Parameters.Add(new SqlCeParameter("@CloseEnded", answer));
+                    cmd2.Parameters.Add(new SqlCeParameter("@OpenEnded", openEnded));
+                    cmd2.Prepare(); 
                     cmd2.ExecuteNonQuery();
                 }
             }
@@ -69,11 +75,11 @@ namespace Zeus.DBAccess
             {
                 conn.Open();
 
-                var cmd = new SqlCeCommand(
-                    String.Format("UPDATE Interview SET EndTime = '{0}' WHERE Id = {1}",
-                        DateTime.Now.ToString("s"), _interviewId),
-                    conn);
-
+                var cmd = conn.CreateCommand();
+                cmd.CommandText = "UPDATE Interview SET EndTime = @EndTime WHERE Id = @Id";
+                cmd.Parameters.Add(new SqlCeParameter("@Id", _interviewId));
+                cmd.Parameters.Add(new SqlCeParameter("@EndTime", DateTime.Now.ToString("s")));
+                cmd.Prepare();
                 cmd.ExecuteNonQuery();
             }
         }
@@ -85,13 +91,15 @@ namespace Zeus.DBAccess
                 conn.Open();
                 DataTable table = new DataTable();
 
-                var cmd = String.Format("SELECT * FROM Answers WHERE Interview_Id = {0} AND Question_Id = {1}",
-                        _interviewId, questionId);
+                var cmd = conn.CreateCommand();
+                cmd.CommandText = "SELECT * FROM Answers WHERE Interview_Id = @InterviewId AND Question_Id = @QuestionId";
+                cmd.Parameters.Add(new SqlCeParameter("@InterviewId", _interviewId));
+                cmd.Parameters.Add(new SqlCeParameter("@QuestionId", questionId));
+                cmd.Prepare();
 
-                var da = new SqlCeDataAdapter(cmd, conn);
+                var da = new SqlCeDataAdapter(cmd);
                 da.Fill(table);
                 da.Dispose();
-
                 return table;
             }
         }
@@ -169,7 +177,8 @@ namespace Zeus.DBAccess
             using (SqlCeConnection conn = new SqlCeConnection(_connectionString))
             {
                 conn.Open();
-                var query = @"
+                var cmd = conn.CreateCommand();
+                cmd.CommandText = @"
                     SELECT [Questions].[Type], [Questions].[Order], [Questions].[NumAnswers], 
                            [Interview].[Interviewer_Id], [Interview].[StartTime], [Interview].[EndTime],
                            [Answers].[OpenEnded], [Answers].[CloseEnded], [Answers].[Question_Id]
@@ -178,11 +187,11 @@ namespace Zeus.DBAccess
                         ON [Answers].[Question_Id] = [Questions].[Id]
                       INNER JOIN [Interview]
                         ON [Answers].[Interview_Id] = [Interview].[Id]
-                    WHERE [Interview_Id] = {0}";
+                    WHERE [Interview_Id] = @InterviewId";
 
-                var cmd = String.Format(query, _interviewId);
-
-                var da = new SqlCeDataAdapter(cmd, conn);
+                cmd.Parameters.Add(new SqlCeParameter("@InterviewId", _interviewId));
+                cmd.Prepare();
+                var da = new SqlCeDataAdapter(cmd);
                 da.Fill(answersDT);
                 da.Dispose();
             }
