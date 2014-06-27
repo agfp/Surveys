@@ -13,7 +13,7 @@ namespace Zeus
 {
     public partial class Form3 : Form
     {
-        #region Private variables and constructor
+        #region Private variables
 
         private Panel _panel;
         private int _currentIndex;
@@ -22,6 +22,17 @@ namespace Zeus
         private List<RadioButton> _radioButtonList;
         private List<CheckBox> _checkBoxList;
         private int _checkedCheckboxes;
+        private static int _goTo = -1;
+
+        #endregion
+
+        #region Public variables and constructor
+
+        public static int GoTo
+        {
+            get { return _goTo; }
+            set { _goTo = value; }
+        }
 
         public Form3()
         {
@@ -119,10 +130,10 @@ namespace Zeus
 
         private void Form3_GotFocus(object sender, EventArgs e)
         {
-            if (Navigation.GoTo > 0)
+            if (_goTo > 0)
             {
-                _currentIndex = Navigation.GoTo;
-                Navigation.GoTo = -1;
+                _currentIndex = _goTo;
+                _goTo = -1;
                 _panel.Dispose();
                 LoadQuestion();
             }
@@ -429,10 +440,6 @@ namespace Zeus
         }
 
         #endregion
-
-
-
-
 
     }
 }

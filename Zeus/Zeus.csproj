@@ -87,7 +87,6 @@
     </Compile>
     <Compile Include="Global\Export.cs" />
     <Compile Include="Global\Interview.cs" />
-    <Compile Include="Global\Navigation.cs" />
     <Compile Include="OpenFileDialogEx\BackKeyHandler.cs" />
     <Compile Include="OpenFileDialogEx\MenuItemWithTag.cs">
       <SubType>Component</SubType>
@@ -130,6 +129,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="Utils\CFMeasureString.cs" />
     <Compile Include="Utils\Utils.cs" />

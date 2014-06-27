@@ -98,8 +98,13 @@ namespace Zeus.DBAccess
 
         public string ConvertToText()
         {
-            var export = new StringBuilder();
+            var text = new StringBuilder();
             var answersDT = GetQuestionsAndAnswersTable();
+
+            var startTime = Convert.ToDateTime(answersDT.Rows[0]["StartTime"]);
+            var endTime = Convert.ToDateTime(answersDT.Rows[0]["EndTime"]);
+            var duration = Convert.ToInt32(endTime.Subtract(startTime).TotalMinutes);
+            text.Append(answersDT.Rows[0]["Interviewer_Id"] + ";" + duration + ";");
 
             var questions = (from o in answersDT.AsEnumerable()
                              orderby o.Field<Int16>("Order")
@@ -124,38 +129,38 @@ namespace Zeus.DBAccess
                 switch (question.Type)
                 {
                     case 1:
-                        export.Append(answer.ElementAt(0).OpenEnded);
+                        text.Append(answer.ElementAt(0).OpenEnded);
                         break;
 
                     case 2:
                         var unfilled = question.NumAnswers - answer.Count();
                         foreach (var option in answer)
                         {
-                            export.Append(option.CloseEnded);
-                            export.Append(";");
+                            text.Append(option.CloseEnded);
+                            text.Append(";");
                         }
                         for (int i = 0; i < unfilled; i++)
                         {
-                            export.Append(-1);
-                            export.Append(";");
+                            text.Append(-1);
+                            text.Append(";");
                         }
-                        export.Remove(export.Length - 1, 1);
+                        text.Remove(text.Length - 1, 1);
                         break;
 
                     case 3:
-                        export.Append(answer.ElementAt(0).CloseEnded);
+                        text.Append(answer.ElementAt(0).CloseEnded);
                         break;
 
                     case 4:
-                        export.Append(answer.ElementAt(0).CloseEnded);
-                        export.Append(";");
-                        export.Append(answer.ElementAt(0).OpenEnded);
+                        text.Append(answer.ElementAt(0).CloseEnded);
+                        text.Append(";");
+                        text.Append(answer.ElementAt(0).OpenEnded);
                         break;
                 }
-                export.Append(";");
+                text.Append(";");
             }
-            export.Remove(export.Length - 1, 1);
-            return export.ToString();
+            text.Remove(text.Length - 1, 1);
+            return text.ToString();
         }
 
         private DataTable GetQuestionsAndAnswersTable()
@@ -165,10 +170,14 @@ namespace Zeus.DBAccess
             {
                 conn.Open();
                 var query = @"
-                    SELECT [Questions].[Type], [Questions].[Order], [Questions].[NumAnswers], [Answers].[OpenEnded], [Answers].[CloseEnded], [Answers].[Question_Id]
-                    FROM Answers 
-                      INNER JOIN [Questions] 
-                        ON [Answers].[Question_Id] = [Questions].[Id] 
+                    SELECT [Questions].[Type], [Questions].[Order], [Questions].[NumAnswers], 
+                           [Interview].[Interviewer_Id], [Interview].[StartTime], [Interview].[EndTime],
+                           [Answers].[OpenEnded], [Answers].[CloseEnded], [Answers].[Question_Id]
+                    FROM [Questions]  
+                      INNER JOIN [Answers]
+                        ON [Answers].[Question_Id] = [Questions].[Id]
+                      INNER JOIN [Interview]
+                        ON [Answers].[Interview_Id] = [Interview].[Id]
                     WHERE [Interview_Id] = {0}";
 
                 var cmd = String.Format(query, _interviewId);

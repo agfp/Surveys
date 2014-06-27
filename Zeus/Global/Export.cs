@@ -10,23 +10,35 @@ namespace Zeus.Global
     {
         public static void ToText()
         {
-            //var folder = "\\Zeus\\Respostas";
-            //var filename = Utils.GetSafeFileName(Survey.Name + DateTime.Now.ToString("yyyy-MM-dd") + ".txt");
-            //var fullname = Path.Combine(folder, filename);
+            var localFolder = Zeus.Properties.Resources.LocalInterviewFolder;
+            ExportTo(localFolder);
 
-            //if (!Directory.Exists(folder))
-            //{
-            //    Directory.CreateDirectory(folder);
-            //}
-            //if (!File.Exists(fullname))
-            //{
-            //    File.Create(fullname);
-            //}
-
-            var bla = Interview.Answer.ConvertToText();
-
+            var storageCard = Zeus.Properties.Resources.StorageCard;
+            if (Directory.Exists(storageCard))
+            {
+                var sdCard = Zeus.Properties.Resources.CardInterviewFolder;
+                ExportTo(sdCard);
+            }
         }
 
-       
+        private static void ExportTo(string folder)
+        {
+            var filename = Utils.GetSafeFileName(Interview.Survey.Name + "_" + DateTime.Now.ToString("yyyy-MM-dd") + ".txt");
+            var fullname = Path.Combine(folder, filename);
+
+            if (!Directory.Exists(folder))
+            {
+                Directory.CreateDirectory(folder);
+            }
+            if (!File.Exists(fullname))
+            {
+                File.Create(filename).Dispose();
+            }
+            var text = Interview.Answer.ConvertToText();
+            using (var stream = File.AppendText(fullname))
+            {
+                stream.WriteLine(text);
+            }
+        }
     }
 }

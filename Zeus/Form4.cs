@@ -15,13 +15,12 @@ namespace Zeus
         public Form4()
         {
             InitializeComponent();
-
             label2.Text = "(Digite um valor entre 1 e " + (Interview.Answer.LastSaved + 2) + ")";
         }
 
         private void menuItem1_Click(object sender, EventArgs e)
         {
-            Navigation.GoTo = -1;
+            Form3.GoTo = -1;
             this.Close();
         }
 
@@ -38,7 +37,7 @@ namespace Zeus
                 MessageBox.Show("Digite um valor dentro do intervalo informado", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Hand, MessageBoxDefaultButton.Button1);
                 return;
             }
-            Navigation.GoTo = input - 1;
+            Form3.GoTo = input - 1;
             this.Close();
         }
     }
