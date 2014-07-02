@@ -82,10 +82,10 @@ namespace Zeus
                 return;
             }
 
-            var type = Convert.ToInt16(Interview.Survey.Questions.Rows[_currentIndex]["Type"]);
+            var type = Convert.ToInt32(Interview.Survey.Questions.Rows[_currentIndex]["Type"]);
             if (type == 2)
             {
-                var numAnswers = Convert.ToInt16(Interview.Survey.Questions.Rows[_currentIndex]["NumAnswers"]);
+                var numAnswers = Convert.ToInt32(Interview.Survey.Questions.Rows[_currentIndex]["NumAnswers"]);
                 var chk = sender as CheckBox;
                 if (chk.Checked)
                 {
@@ -152,7 +152,7 @@ namespace Zeus
             }
 
             ReloadForm();
-            var type = Convert.ToInt16(Interview.Survey.Questions.Rows[_currentIndex]["Type"]);
+            var type = Convert.ToInt32(Interview.Survey.Questions.Rows[_currentIndex]["Type"]);
             switch (type)
             {
                 case 1:
@@ -324,7 +324,7 @@ namespace Zeus
 
         private bool ValidanteAndSave()
         {
-            var type = Convert.ToInt16(Interview.Survey.Questions.Rows[_currentIndex]["Type"]);
+            var type = Convert.ToInt32(Interview.Survey.Questions.Rows[_currentIndex]["Type"]);
             string message = String.Empty;
             if (type == 1)
             {
@@ -399,7 +399,7 @@ namespace Zeus
             var answers = Interview.Answer.Get(_currentQuestionId);
             if (answers.Rows.Count > 0)
             {
-                var type = Convert.ToInt16(Interview.Survey.Questions.Rows[_currentIndex]["Type"]);
+                var type = Convert.ToInt32(Interview.Survey.Questions.Rows[_currentIndex]["Type"]);
                 if (type == 1)
                 {
                     _textBox.Text = answers.Rows[0]["OpenEnded"].ToString();

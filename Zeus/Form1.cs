@@ -26,7 +26,7 @@ namespace Zeus
         private void menuItem2_Click(object sender, EventArgs e)
         {
             OpenFileDialogEx ofd = new OpenFileDialogEx();
-            ofd.Filter = "*.sdf";
+            ofd.Filter = "*.zeus";
 
             if (ofd.ShowDialog() == DialogResult.OK)
             {

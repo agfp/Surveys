@@ -58,7 +58,7 @@ namespace Zeus.DBAccess
                     cmd2.Parameters.Add(new SqlCeParameter("@InterviewId", _interviewId));
                     cmd2.Parameters.Add(new SqlCeParameter("@QuestionId", questionId));
                     cmd2.Parameters.Add(new SqlCeParameter("@CloseEnded", answer));
-                    cmd2.Parameters.Add(new SqlCeParameter("@OpenEnded", openEnded));
+                    cmd2.Parameters.Add(new SqlCeParameter("@OpenEnded", openEnded.Replace(';', '_')));
                     cmd2.Prepare(); 
                     cmd2.ExecuteNonQuery();
                 }
@@ -112,15 +112,17 @@ namespace Zeus.DBAccess
             var startTime = Convert.ToDateTime(answersDT.Rows[0]["StartTime"]);
             var endTime = Convert.ToDateTime(answersDT.Rows[0]["EndTime"]);
             var duration = Convert.ToInt32(endTime.Subtract(startTime).TotalMinutes);
-            text.Append(answersDT.Rows[0]["Interviewer_Id"] + ";" + duration + ";");
+
+            text.Append(startTime.ToString("s") + ";" + duration + ";");
+            text.Append(answersDT.Rows[0]["Interviewer_Id"] + ";");
 
             var questions = (from o in answersDT.AsEnumerable()
-                             orderby o.Field<Int16>("Order")
+                             orderby o.Field<int>("Order")
                              select new
                              {
                                  Id = o.Field<int>("Question_Id"),
-                                 Type = o.Field<byte>("Type"),
-                                 NumAnswers = o.Field<byte?>("NumAnswers")
+                                 Type = o.Field<int>("Type"),
+                                 NumAnswers = o.Field<int?>("NumAnswers")
                              }
                             ).Distinct();
 
@@ -130,7 +132,7 @@ namespace Zeus.DBAccess
                              where o.Field<int>("Question_Id") == question.Id
                              select new
                              {
-                                 CloseEnded = o.Field<byte?>("CloseEnded"),
+                                 CloseEnded = o.Field<int?>("CloseEnded"),
                                  OpenEnded = o.Field<string>("OpenEnded")
                              };
 
