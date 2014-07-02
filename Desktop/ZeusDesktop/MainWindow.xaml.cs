@@ -39,6 +39,8 @@ namespace ZeusDesktop
 
         #region Events
 
+        #region Buttons
+
         private void btnNewQuestion_Click(object sender, RoutedEventArgs e)
         {
             UCQuestion ucQuestion = new UCQuestion();
@@ -102,45 +104,22 @@ namespace ZeusDesktop
             HideAddInterviewerGrid();
         }
 
-        private void ucQuestion_AddQuestion(object sender, QuestionEventArgs e)
+        private void btnEditQuestion_Click(object sender, RoutedEventArgs e)
         {
-            _questions.Add(e.Question);
+            EditQuestion();
         }
 
-        private void ucQuestion_EditQuestion(object sender, QuestionEventArgs e)
+        private void btnDeleteQuestion_Click(object sender, RoutedEventArgs e)
         {
-            var index = lvQuestions.SelectedIndex;
-            _questions.RemoveAt(index);
-            _questions.Insert(index, e.Question);
-        }
-
-        private void menuSave_Click(object sender, RoutedEventArgs e)
-        {
-            if (Validate())
+            if (lvQuestions.SelectedItem != null)
             {
-                if (String.IsNullOrEmpty(_filename))
-                {
-                    SaveFileDialog dlg = new SaveFileDialog();
-                    dlg.DefaultExt = ".zeus";
-                    dlg.Filter = "Questionários (.zeus)|*.zeus"; 
-
-                    bool? result = dlg.ShowDialog();
-
-                    if (result == true)
-                    {
-                        _filename = dlg.FileName;
-                    }
-                    else
-                    {
-                        return;
-                    }
-                }
-                CopyDatabase(_filename);
-                ExportData(_filename);
-                Title = "ZeusDesktop (v." + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString() + ") - " +  Path.GetFileName(_filename);
-                MessageBox.Show("Questionário salvo com sucesso", "Mensagem", MessageBoxButton.OK, MessageBoxImage.Information);
+                _questions.Remove((Questions)lvQuestions.SelectedItem);
             }
         }
+
+        #endregion
+
+        #region Menu bar
 
         private void menuNew_Click(object sender, RoutedEventArgs e)
         {
@@ -159,25 +138,7 @@ namespace ZeusDesktop
                 lvQuestions.ItemsSource = _questions;
             }
         }
-
-        private void btnEditQuestion_Click(object sender, RoutedEventArgs e)
-        {
-            EditQuestion();
-        }
-
-        private void lvQuestions_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            EditQuestion();
-        }
-
-        private void btnDeleteQuestion_Click(object sender, RoutedEventArgs e)
-        {
-            if (lvQuestions.SelectedItem != null)
-            {
-                _questions.Remove((Questions)lvQuestions.SelectedItem);
-            }
-        }
-
+        
         private void menuOpen_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog dlg = new OpenFileDialog();
@@ -192,13 +153,80 @@ namespace ZeusDesktop
                     ImportData(dlg.FileName);
                     _filename = dlg.FileName;
                     Title = "ZeusDesktop (v." + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString() + ") - " + Path.GetFileName(dlg.FileName);
-
                 }
                 catch (Exception)
                 {
                     MessageBox.Show("Não foi possível abrir o arquivo especificado", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
+        }
+
+        private void menuSave_Click(object sender, RoutedEventArgs e)
+        {
+            if (Validate())
+            {
+                if (String.IsNullOrEmpty(_filename))
+                {
+                    SaveFileDialog dlg = new SaveFileDialog();
+                    dlg.DefaultExt = ".zeus";
+                    dlg.Filter = "Questionários (.zeus)|*.zeus";
+
+                    bool? result = dlg.ShowDialog();
+
+                    if (result == true)
+                    {
+                        _filename = dlg.FileName;
+                    }
+                    else
+                    {
+                        return;
+                    }
+                }
+                CopyDatabase(_filename);
+                ExportData(_filename);
+                Title = "ZeusDesktop (v." + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString() + ") - " + Path.GetFileName(_filename);
+                MessageBox.Show("Questionário salvo com sucesso", "Mensagem", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+        }
+
+        private void menuSaveAs_Click(object sender, RoutedEventArgs e)
+        {
+            if (Validate())
+            {
+                SaveFileDialog dlg = new SaveFileDialog();
+                dlg.DefaultExt = ".zeus";
+                dlg.Filter = "Questionários (.zeus)|*.zeus";
+
+                bool? result = dlg.ShowDialog();
+
+                if (result == true)
+                {
+                    CopyDatabase(dlg.FileName);
+                    ExportData(dlg.FileName);
+                    _filename = dlg.FileName;
+                    Title = "ZeusDesktop (v." + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString() + ") - " + Path.GetFileName(_filename);
+                    MessageBox.Show("Questionário salvo com sucesso", "Mensagem", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+            }
+        }
+
+        #endregion
+
+        private void ucQuestion_AddQuestion(object sender, QuestionEventArgs e)
+        {
+            _questions.Add(e.Question);
+        }
+
+        private void ucQuestion_EditQuestion(object sender, QuestionEventArgs e)
+        {
+            var index = lvQuestions.SelectedIndex;
+            _questions.RemoveAt(index);
+            _questions.Insert(index, e.Question);
+        }
+
+        private void lvQuestions_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            EditQuestion();
         }
 
         #endregion
@@ -284,7 +312,7 @@ namespace ZeusDesktop
                 for (int i = 0; i < lvQuestions.Items.Count; i++)
                 {
                     var question = lvQuestions.Items[i] as Questions;
-                    
+
                     question.Order = i;
                     db.Questions.InsertOnSubmit(question);
                 }
@@ -322,7 +350,7 @@ namespace ZeusDesktop
                     }
                     _questions.Add(q);
                 }
-                
+
                 _interviewers = new ObservableCollection<Interviewers>(db.Interviewers);
 
                 lvInterviewers.ItemsSource = _interviewers;

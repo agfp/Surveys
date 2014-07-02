@@ -38,12 +38,20 @@
                     Salvar
                 </MenuItem.ToolTip>
             </MenuItem>
+            <MenuItem Name="menuSaveAs" Click="menuSaveAs_Click">
+                <MenuItem.Header>
+                    <Image Source="Images/document-save-as.png" Height="32" Width="32"/>
+                </MenuItem.Header>
+                <MenuItem.ToolTip>
+                    Salvar como...
+                </MenuItem.ToolTip>
+            </MenuItem>
             <MenuItem Name="menuHelp">
                 <MenuItem.Header>
                     <Image Source="Images/system-help.png" Height="32" Width="32"/>
                 </MenuItem.Header>
                 <MenuItem.ToolTip>
-                    Salvar
+                    Ajuda
                 </MenuItem.ToolTip>
             </MenuItem>
         </Menu>
