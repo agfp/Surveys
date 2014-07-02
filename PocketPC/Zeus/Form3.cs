@@ -408,7 +408,7 @@ namespace Zeus
                 {
                     var checkboxes = from a in answers.AsEnumerable()
                                      from c in _checkBoxList
-                                     where a.Field<byte>("CloseEnded") == Convert.ToInt32(c.Tag)
+                                     where a.Field<int>("CloseEnded") == Convert.ToInt32(c.Tag)
                                      select c;
 
                     foreach (var c in checkboxes)
@@ -420,7 +420,7 @@ namespace Zeus
                 {
                     var radiobutton = (from a in answers.AsEnumerable()
                                        from r in _radioButtonList
-                                       where a.Field<byte>("CloseEnded") == Convert.ToInt32(r.Tag)
+                                       where a.Field<int>("CloseEnded") == Convert.ToInt32(r.Tag)
                                        select r).Single();
 
                     radiobutton.Checked = true;
