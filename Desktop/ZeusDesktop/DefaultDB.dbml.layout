@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11, 8.75" name="DefaultDB">
+  <DataContextMoniker Name="/DefaultDB" />
+  <nestedChildShapes>
+    <classShape Id="7939ed02-59f1-4896-9935-3b8426fd7387" isExpanded="false" absoluteBounds="0.75, 0.75, 2, 0.44999999999999929">
+      <DataClassMoniker Name="/DefaultDB/Answers" />
+      <nestedChildShapes>
+        <elementListCompartment Id="06b67f2f-32b7-4568-9b43-daa8818cc65b" absoluteBounds="0.76499999999999968, 1.21, 1.9700000000000002, 1.2108968098958333" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="5ae71620-c38a-43c7-8c15-574f67c04744" isExpanded="false" absoluteBounds="0.75, 2.75, 2, 0.44999999999999929">
+      <DataClassMoniker Name="/DefaultDB/Interview" />
+      <nestedChildShapes>
+        <elementListCompartment Id="cd4c31e4-bb50-4e2c-afd8-a077bcf98687" absoluteBounds="0.76500000000000057, 3.21, 1.9700000000000002, 1.0185953776041665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="c3df9e96-c56c-471b-97fd-2fdfaec52ea1" isExpanded="false" absoluteBounds="3.75, 0.75, 2, 0.44999999999999973">
+      <DataClassMoniker Name="/DefaultDB/Interviewers" />
+      <nestedChildShapes>
+        <elementListCompartment Id="6e836576-4964-409a-bcbb-0b0ee33402d7" absoluteBounds="3.7649999999999997, 1.21, 1.9700000000000002, 0.63399251302083326" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="3ec1cc16-9370-4606-b09f-a25985102b0e" absoluteBounds="1.25, 6.875, 2, 1.5785953776041666">
+      <DataClassMoniker Name="/DefaultDB/Options" />
+      <nestedChildShapes>
+        <elementListCompartment Id="6ab17360-2909-407b-9d55-bd59486b3708" absoluteBounds="1.2650000000000006, 7.335, 1.9700000000000002, 1.0185953776041665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="fd63d229-7f2a-4dad-b4a8-6b0a61c18d15" absoluteBounds="0.5, 3.75, 2, 1.9631982421874996">
+      <DataClassMoniker Name="/DefaultDB/Questions" />
+      <nestedChildShapes>
+        <elementListCompartment Id="70ef340d-bea6-4de2-ba01-ad56660c064a" absoluteBounds="0.51499999999999968, 4.21, 1.9700000000000002, 1.4031982421875" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="6d591253-0928-462a-9830-de417cf516bd" absoluteBounds="5.625, 6.5, 2, 1.3862939453125005">
+      <DataClassMoniker Name="/DefaultDB/SurveyInfo" />
+      <nestedChildShapes>
+        <elementListCompartment Id="a2bf12f3-e39e-44b4-a6cb-f476a80473cf" absoluteBounds="5.6400000000000006, 6.96, 1.9700000000000002, 0.8262939453125" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <associationConnector edgePoints="[(1.875 : 5.7131982421875); (1.875 : 6.875)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/DefaultDB/Questions/Questions_Options" />
+      <nodes>
+        <classShapeMoniker Id="fd63d229-7f2a-4dad-b4a8-6b0a61c18d15" />
+        <classShapeMoniker Id="3ec1cc16-9370-4606-b09f-a25985102b0e" />
+      </nodes>
+    </associationConnector>
+  </nestedChildShapes>
+</ordesignerObjectsDiagram>
