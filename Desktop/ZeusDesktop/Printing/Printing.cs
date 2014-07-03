@@ -16,56 +16,32 @@ namespace ZeusDesktop
             FlowDocument fd = new FlowDocument();
 
             fd.FontFamily = new System.Windows.Media.FontFamily("Calibri");
-            fd.FontSize = 11;
+            fd.FontSize = 12;
 
             Style style = new Style(typeof(Paragraph));
-            style.Setters.Add(new Setter(Block.MarginProperty, new Thickness(2)));
+            style.Setters.Add(new Setter(Block.MarginProperty, new Thickness(0, 2, 0, 2)));
             fd.Resources.Add(typeof(Paragraph), style);
 
-            Style style2 = new Style(typeof(TableRow));
-            style2.Setters.Add(new Setter(Block.MarginProperty, new Thickness(20)));
-            fd.Resources.Add(typeof(TableRow), style2);
+            Style style2 = new Style(typeof(Paragraph));
+            style2.Setters.Add(new Setter(Block.MarginProperty, new Thickness(0,0,0,20)));
+            fd.Resources.Add("Question", style2);
 
-            Paragraph title = new Paragraph() { FontWeight = FontWeights.Bold, TextAlignment = System.Windows.TextAlignment.Center, FontSize = 16 };
+            Paragraph title = new Paragraph() { FontWeight = FontWeights.Bold, TextAlignment = System.Windows.TextAlignment.Center, FontSize = 18 };
             fd.Blocks.Add(title);
             title.Inlines.Add(survey);
 
-            Paragraph space = new Paragraph();
-            fd.Blocks.Add(space);
-            space.Inlines.Add(" ");
 
-            Table table = new Table();
-            fd.Blocks.Add(table);
-            //table.Columns.Add(new TableColumn() { Width = new GridLength(25) });
-            table.Columns.Add(new TableColumn());
-
-            TableRowGroup rowgroup = new TableRowGroup();
-            table.RowGroups.Add(rowgroup);
+            Paragraph title2 = new Paragraph();
+            fd.Blocks.Add(title2);
+            title2.Inlines.Add(" ");
 
             for (int j = 0; j < 2; j++)
-            for (int i = 0; i < questions.Count; i++)
-            {
-                TableRow row = new TableRow();
+                for (int i = 0; i < questions.Count; i++)
+                {
 
-                //TableCell cell1 = new TableCell();
-                //row.Cells.Add(cell1);
-
-                //Paragraph number = new Paragraph() { FontWeight = FontWeights.Bold };
-                //cell1.Blocks.Add(number);
-                //number.Inlines.Add((i + 1) + ".");
-
-                var cell2 = NewMethod(questions[i], i+1);
-                row.Cells.Add(cell2);
-
-                rowgroup.Rows.Add(row);
-
-                TableRow r = new TableRow();
-                rowgroup.Rows.Add(r);
-
-                TableCell c = new TableCell() { ColumnSpan = 1 };
-                r.Cells.Add(c);
-                c.Blocks.Add(space);
-            }
+                    NewMethod(questions[i], i + 1, fd);
+                    fd.Blocks.Add(title2);
+                }
 
             PrintDialog pd = new PrintDialog();
             pd.ShowDialog();
@@ -82,18 +58,20 @@ namespace ZeusDesktop
 
         }
 
-        private static TableCell NewMethod(Questions question, int i)
+        private static void NewMethod(Questions question, int i, FlowDocument fd)
         {
-            TableCell cell2 = new TableCell();
+            //TableCell cell2 = new TableCell();
 
             Paragraph q1 = new Paragraph();
             Paragraph q2 = new Paragraph();
 
-            cell2.Blocks.Add(q1);
-            cell2.Blocks.Add(q2);
+            q1.SetResourceReference(Control.StyleProperty, "Question");
 
-            q1.Inlines.Add(new Bold(new Run(i + ". " + question.Question)));
-            
+            fd.Blocks.Add(q1);
+            fd.Blocks.Add(q2);
+
+            q1.Inlines.Add(new Bold(new Run(i + ") " + question.Question)));
+
 
             switch (question.Type)
             {
@@ -115,8 +93,6 @@ namespace ZeusDesktop
 
             if (!String.IsNullOrEmpty(question.Instruction))
             {
-                //Paragraph q3 = new Paragraph();
-                //cell2.Blocks.Add(q3);
                 q2.Inlines.Add(" (");
                 q2.Inlines.Add(new Italic(new Run(question.Instruction)));
                 q2.Inlines.Add(")");
@@ -126,7 +102,7 @@ namespace ZeusDesktop
             {
                 case 1:
                     BlockUIContainer b1 = new BlockUIContainer();
-                    cell2.Blocks.Add(b1);
+                    fd.Blocks.Add(b1);
                     b1.Child = new TextBox() { Width = 200, HorizontalAlignment = HorizontalAlignment.Left };
                     break;
 
@@ -134,7 +110,7 @@ namespace ZeusDesktop
                     foreach (var option in question.Options)
                     {
                         BlockUIContainer b2 = new BlockUIContainer();
-                        cell2.Blocks.Add(b2);
+                        fd.Blocks.Add(b2);
                         b2.Child = new CheckBox() { Content = option.Option };
                     }
                     break;
@@ -143,7 +119,7 @@ namespace ZeusDesktop
                     foreach (var option in question.Options)
                     {
                         BlockUIContainer b2 = new BlockUIContainer();
-                        cell2.Blocks.Add(b2);
+                        fd.Blocks.Add(b2);
                         b2.Child = new RadioButton() { Content = option.Option };
                     }
                     break;
@@ -152,12 +128,12 @@ namespace ZeusDesktop
                     foreach (var option in question.Options)
                     {
                         BlockUIContainer b2 = new BlockUIContainer();
-                        cell2.Blocks.Add(b2);
+                        fd.Blocks.Add(b2);
                         b2.Child = new RadioButton() { Content = option.Option };
                     }
 
                     BlockUIContainer b3 = new BlockUIContainer();
-                    cell2.Blocks.Add(b3);
+                    fd.Blocks.Add(b3);
                     StackPanel s = new StackPanel() { Orientation = System.Windows.Controls.Orientation.Horizontal };
                     var r = new RadioButton() { Content = "Outro. Especificar:  " };
                     var t = new TextBox() { Width = 200, HorizontalAlignment = HorizontalAlignment.Left };
@@ -167,7 +143,6 @@ namespace ZeusDesktop
                     break;
 
             }
-            return cell2;
         }
     }
 }
