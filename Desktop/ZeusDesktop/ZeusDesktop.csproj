@@ -110,6 +110,7 @@
     <Compile Include="DragAndDrop\DragAdorner.cs" />
     <Compile Include="DragAndDrop\ListViewDragDropManager.cs" />
     <Compile Include="DragAndDrop\MouseUtilities.cs" />
+    <Compile Include="Printing\Printing.cs" />
     <Compile Include="UCQuestion.xaml.cs">
       <DependentUpon>UCQuestion.xaml</DependentUpon>
     </Compile>

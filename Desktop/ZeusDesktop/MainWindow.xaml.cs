@@ -9,6 +9,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using WPF.JoshSmith.ServiceProviders.UI;
+using System.Windows.Documents;
 
 namespace ZeusDesktop
 {
@@ -138,7 +139,7 @@ namespace ZeusDesktop
                 lvQuestions.ItemsSource = _questions;
             }
         }
-        
+
         private void menuOpen_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog dlg = new OpenFileDialog();
@@ -208,6 +209,28 @@ namespace ZeusDesktop
                     MessageBox.Show("Questionário salvo com sucesso", "Mensagem", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
             }
+        }
+
+        private void menuPrint_Click(object sender, RoutedEventArgs e)
+        {
+            Printing.Print(txtSurveyName.Text, _questions.ToList());
+
+            //Page1 control = new Page1();
+
+            ////Printing.Printer.Print(control);
+
+            ////Printing.PrintCommand b = new Printing.PrintCommand();
+            ////b.Execute(control);
+
+            //PrintDialog printDlg = new System.Windows.Controls.PrintDialog();
+
+            //if (printDlg.ShowDialog() == true)
+            //{
+
+            //    printDlg.PrintVisual(control, "First WPF Print");
+
+            //}
+
         }
 
         #endregion
@@ -362,5 +385,7 @@ namespace ZeusDesktop
         }
 
         #endregion
+
+
     }
 }

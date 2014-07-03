@@ -46,7 +46,7 @@
                     Salvar como...
                 </MenuItem.ToolTip>
             </MenuItem>
-            <MenuItem Name="menuPrint">
+            <MenuItem Name="menuPrint" Click="menuPrint_Click">
                 <MenuItem.Header>
                     <Image Source="Images/document-print.png" Height="32" Width="32"/>
                 </MenuItem.Header>
