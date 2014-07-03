@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Windows.Documents;
 using System.Windows;
 using System.Windows.Controls;
@@ -13,135 +11,117 @@ namespace ZeusDesktop
     {
         public static void Print(string survey, List<Questions> questions)
         {
-            FlowDocument fd = new FlowDocument();
+            PrintDialog pd = new PrintDialog();
+            if (pd.ShowDialog() == true)
+            {
+                FlowDocument fd = new FlowDocument();
 
-            fd.FontFamily = new System.Windows.Media.FontFamily("Calibri");
-            fd.FontSize = 12;
+                fd.FontFamily = new System.Windows.Media.FontFamily("Calibri");
+                fd.FontSize = 14;
 
-            Style style = new Style(typeof(Paragraph));
-            style.Setters.Add(new Setter(Block.MarginProperty, new Thickness(0, 2, 0, 2)));
-            fd.Resources.Add(typeof(Paragraph), style);
+                Style style2 = new Style(typeof(Paragraph));
+                style2.Setters.Add(new Setter(Block.MarginProperty, new Thickness(0, 20, 0, 2)));
+                fd.Resources.Add("Question", style2);
 
-            Style style2 = new Style(typeof(Paragraph));
-            style2.Setters.Add(new Setter(Block.MarginProperty, new Thickness(0,0,0,20)));
-            fd.Resources.Add("Question", style2);
-
-            Paragraph title = new Paragraph() { FontWeight = FontWeights.Bold, TextAlignment = System.Windows.TextAlignment.Center, FontSize = 18 };
-            fd.Blocks.Add(title);
-            title.Inlines.Add(survey);
-
-
-            Paragraph title2 = new Paragraph();
-            fd.Blocks.Add(title2);
-            title2.Inlines.Add(" ");
-
-            for (int j = 0; j < 2; j++)
+                Paragraph title = new Paragraph() { FontWeight = FontWeights.Bold, TextAlignment = System.Windows.TextAlignment.Center, FontSize = 24 };
+                fd.Blocks.Add(title);
+                title.Inlines.Add(survey);
+                
                 for (int i = 0; i < questions.Count; i++)
                 {
-
-                    NewMethod(questions[i], i + 1, fd);
-                    fd.Blocks.Add(title2);
+                    CreateQuestion(questions[i], i + 1, fd);
                 }
 
-            PrintDialog pd = new PrintDialog();
-            pd.ShowDialog();
-            fd.PageHeight = pd.PrintableAreaHeight;
-            fd.PageWidth = pd.PrintableAreaWidth;
-            fd.PagePadding = new Thickness(50);
-            fd.ColumnGap = 20;
-            fd.ColumnWidth = pd.PrintableAreaWidth / 3;
-            fd.ColumnRuleBrush = new SolidColorBrush(Colors.Black);
-            fd.ColumnRuleWidth = 1;
+                fd.PageHeight = pd.PrintableAreaHeight;
+                fd.PageWidth = pd.PrintableAreaWidth;
+                fd.PagePadding = new Thickness(50);
+                fd.ColumnGap = 20;
+                fd.ColumnWidth = pd.PrintableAreaWidth / 3;
+                fd.ColumnRuleBrush = new SolidColorBrush(Colors.Black);
+                fd.ColumnRuleWidth = 1;
 
-            IDocumentPaginatorSource dps = fd;
-            pd.PrintDocument(dps.DocumentPaginator, survey);
-
+                IDocumentPaginatorSource dps = fd;
+                pd.PrintDocument(dps.DocumentPaginator, survey);
+            }
         }
 
-        private static void NewMethod(Questions question, int i, FlowDocument fd)
+        public delegate Control OptionControl();
+
+        private static void CreateQuestion(Questions question, int number, FlowDocument doc)
         {
-            //TableCell cell2 = new TableCell();
+            Paragraph p = new Paragraph() { KeepTogether = true };
+            doc.Blocks.Add(p);
+            p.SetResourceReference(Control.StyleProperty, "Question");
 
-            Paragraph q1 = new Paragraph();
-            Paragraph q2 = new Paragraph();
+            p.Inlines.Add(new Bold(new Run(number + ") " + question.Question + "\n")));
 
-            q1.SetResourceReference(Control.StyleProperty, "Question");
-
-            fd.Blocks.Add(q1);
-            fd.Blocks.Add(q2);
-
-            q1.Inlines.Add(new Bold(new Run(i + ") " + question.Question)));
-
-
-            switch (question.Type)
+            if (question.Type == 1)
             {
-                case 1:
-                    q2.Inlines.Add("Preencha o campo");
-                    break;
+                AddQuestionHeader(p,
+                    "Preencha o campo",
+                    question.Instruction);
 
-                case 2:
-                    q2.Inlines.Add("Selecione até " + question.NumAnswers + " opções");
-                    break;
-
-                case 3:
-                case 4:
-                    q2.Inlines.Add("Selecione uma opção");
-                    break;
-
+                AddTextbox(p);
+                
             }
-
-
-            if (!String.IsNullOrEmpty(question.Instruction))
+            else if (question.Type == 2)
             {
-                q2.Inlines.Add(" (");
-                q2.Inlines.Add(new Italic(new Run(question.Instruction)));
-                q2.Inlines.Add(")");
+                AddQuestionHeader(p,
+                    "Selecione até " + question.NumAnswers + " opções",
+                    question.Instruction);
+
+                AddOptions(p, question, () => { return new CheckBox(); });
             }
-
-            switch (question.Type)
+            else
             {
-                case 1:
-                    BlockUIContainer b1 = new BlockUIContainer();
-                    fd.Blocks.Add(b1);
-                    b1.Child = new TextBox() { Width = 200, HorizontalAlignment = HorizontalAlignment.Left };
-                    break;
+                AddQuestionHeader(p,
+                    "Selecione uma opção",
+                    question.Instruction);
 
-                case 2:
-                    foreach (var option in question.Options)
-                    {
-                        BlockUIContainer b2 = new BlockUIContainer();
-                        fd.Blocks.Add(b2);
-                        b2.Child = new CheckBox() { Content = option.Option };
-                    }
-                    break;
+                AddOptions(p, question, () => { return new RadioButton(); });
 
-                case 3:
-                    foreach (var option in question.Options)
-                    {
-                        BlockUIContainer b2 = new BlockUIContainer();
-                        fd.Blocks.Add(b2);
-                        b2.Child = new RadioButton() { Content = option.Option };
-                    }
-                    break;
+                if (question.Type == 4)
+                {
+                    p.Inlines.Add("\n");
+                    var radiobutton = new InlineUIContainer() { Child = new RadioButton() };
+                    p.Inlines.Add(radiobutton);
+                    p.Inlines.Add(" Outro. Especificar: ");
+                    AddTextbox(p);
+                }
+            }
+        }
 
-                case 4:
-                    foreach (var option in question.Options)
-                    {
-                        BlockUIContainer b2 = new BlockUIContainer();
-                        fd.Blocks.Add(b2);
-                        b2.Child = new RadioButton() { Content = option.Option };
-                    }
+        private static void AddQuestionHeader(Paragraph p, string instruction1, string instruction2)
+        {
+            p.Inlines.Add(instruction1);
+            if (!String.IsNullOrEmpty(instruction2))
+            {
+                p.Inlines.Add(" (");
+                p.Inlines.Add(new Italic(new Run(instruction2)));
+                p.Inlines.Add(")");
+            }
+            p.Inlines.Add(":\n");
+        }
 
-                    BlockUIContainer b3 = new BlockUIContainer();
-                    fd.Blocks.Add(b3);
-                    StackPanel s = new StackPanel() { Orientation = System.Windows.Controls.Orientation.Horizontal };
-                    var r = new RadioButton() { Content = "Outro. Especificar:  " };
-                    var t = new TextBox() { Width = 200, HorizontalAlignment = HorizontalAlignment.Left };
-                    s.Children.Add(r);
-                    s.Children.Add(t);
-                    b3.Child = s;
-                    break;
+        private static void AddTextbox(Paragraph p)
+        {
+            InlineUIContainer textbox = new InlineUIContainer();
+            textbox.Child = new TextBox() { Width = 200, HorizontalAlignment = HorizontalAlignment.Left };
+            p.Inlines.Add(textbox);
+        }
 
+        private static void AddOptions(Paragraph p, Questions question, OptionControl optionControl)
+        {
+            for (int i = 0; i < question.Options.Count; i++)
+            {
+                if (i != 0)
+                {
+                    p.Inlines.Add("\n");
+                }
+                var control = new InlineUIContainer() { Child = optionControl() };
+                p.Inlines.Add(control);
+                p.Inlines.Add(" ");
+                p.Inlines.Add(question.Options[i].Option);
             }
         }
     }
