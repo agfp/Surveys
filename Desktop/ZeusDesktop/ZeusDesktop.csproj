@@ -26,7 +26,7 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>6</ApplicationRevision>
+    <ApplicationRevision>9</ApplicationRevision>
     <ApplicationVersion>0.1.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -153,6 +153,7 @@
     <None Include="ZeusDesktop_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="App.ico" />
     <Resource Include="Images\add.png" />
     <Resource Include="Images\delete.png" />
     <Resource Include="Images\document-new.png" />
@@ -162,7 +163,7 @@
     <Resource Include="Images\edit.png" />
     <Resource Include="Images\remove-icon.png" />
     <Resource Include="Images\system-help.png" />
-    <Resource Include="Bolt.ico" />
+    <Content Include="Bolt.ico" />
     <EmbeddedResource Include="DefaultDB.sdf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
@@ -209,6 +210,14 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\document-print.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <FileAssociation Include=".zeus">
+      <Visible>False</Visible>
+      <Description>Questionário</Description>
+      <Progid>Zeus</Progid>
+      <DefaultIcon>Bolt.ico</DefaultIcon>
+    </FileAssociation>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -23,7 +23,18 @@ namespace ZeusDesktop
         public MainWindow()
         {
             InitializeComponent();
+            ConfigureWindow();
+        }
 
+        public MainWindow(string filename)
+        {
+            InitializeComponent();
+            ConfigureWindow();
+            Open(filename);
+        }
+
+        private void ConfigureWindow()
+        {
             Title = "ZeusDesktop (v." + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString() + ") - " + "Novo questionário";
 
             lvInterviewers.ItemsSource = _interviewers;
@@ -35,7 +46,6 @@ namespace ZeusDesktop
             _dragMgr = new ListViewDragDropManager<Questions>(lvQuestions);
             _dragMgr.ShowDragAdorner = true;
             _dragMgr.DragAdornerOpacity = 0.5;
-
         }
 
         #region Events
@@ -143,22 +153,14 @@ namespace ZeusDesktop
         private void menuOpen_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog dlg = new OpenFileDialog();
+            dlg.InitialDirectory = Path.Combine(System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Zeus");
             dlg.DefaultExt = ".zeus";
             dlg.Filter = "Questionários (.zeus)|*.zeus";
 
             bool? result = dlg.ShowDialog();
             if (result == true)
             {
-                try
-                {
-                    ImportData(dlg.FileName);
-                    _filename = dlg.FileName;
-                    Title = "ZeusDesktop (v." + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString() + ") - " + Path.GetFileName(dlg.FileName);
-                }
-                catch (Exception)
-                {
-                    MessageBox.Show("Não foi possível abrir o arquivo especificado", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
+                Open(dlg.FileName);
             }
         }
 
@@ -169,6 +171,7 @@ namespace ZeusDesktop
                 if (String.IsNullOrEmpty(_filename))
                 {
                     SaveFileDialog dlg = new SaveFileDialog();
+                    dlg.InitialDirectory = Path.Combine(System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Zeus");
                     dlg.DefaultExt = ".zeus";
                     dlg.Filter = "Questionários (.zeus)|*.zeus";
 
@@ -195,6 +198,7 @@ namespace ZeusDesktop
             if (Validate())
             {
                 SaveFileDialog dlg = new SaveFileDialog();
+                dlg.InitialDirectory = Path.Combine(System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Zeus");
                 dlg.DefaultExt = ".zeus";
                 dlg.Filter = "Questionários (.zeus)|*.zeus";
 
@@ -214,23 +218,6 @@ namespace ZeusDesktop
         private void menuPrint_Click(object sender, RoutedEventArgs e)
         {
             Printing.Print(txtSurveyName.Text, _questions.ToList());
-
-            //Page1 control = new Page1();
-
-            ////Printing.Printer.Print(control);
-
-            ////Printing.PrintCommand b = new Printing.PrintCommand();
-            ////b.Execute(control);
-
-            //PrintDialog printDlg = new System.Windows.Controls.PrintDialog();
-
-            //if (printDlg.ShowDialog() == true)
-            //{
-
-            //    printDlg.PrintVisual(control, "First WPF Print");
-
-            //}
-
         }
 
         #endregion
@@ -303,6 +290,20 @@ namespace ZeusDesktop
                 return false;
             }
             return true;
+        }
+
+        private void Open(string filename)
+        {
+            try
+            {
+                ImportData(filename);
+                _filename = filename;
+                Title = "ZeusDesktop (v." + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString() + ") - " + Path.GetFileName(filename);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Não foi possível abrir o arquivo especificado", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void CopyDatabase(string path)

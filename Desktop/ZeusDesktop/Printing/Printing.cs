@@ -19,11 +19,11 @@ namespace ZeusDesktop
                 fd.FontFamily = new System.Windows.Media.FontFamily("Calibri");
                 fd.FontSize = 14;
 
-                Style style2 = new Style(typeof(Paragraph));
-                style2.Setters.Add(new Setter(Block.MarginProperty, new Thickness(0, 20, 0, 2)));
-                fd.Resources.Add("Question", style2);
+                Style style = new Style(typeof(Paragraph));
+                style.Setters.Add(new Setter(Block.MarginProperty, new Thickness(0, 20, 0, 2)));
+                fd.Resources.Add("Question", style);
 
-                Paragraph title = new Paragraph() { FontWeight = FontWeights.Bold, TextAlignment = System.Windows.TextAlignment.Center, FontSize = 24 };
+                Paragraph title = new Paragraph() { FontWeight = FontWeights.Bold, TextAlignment = System.Windows.TextAlignment.Center, FontSize = 22 };
                 fd.Blocks.Add(title);
                 title.Inlines.Add(survey);
                 
@@ -62,7 +62,6 @@ namespace ZeusDesktop
                     question.Instruction);
 
                 AddTextbox(p);
-                
             }
             else if (question.Type == 2)
             {

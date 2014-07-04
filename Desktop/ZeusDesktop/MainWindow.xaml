@@ -1,7 +1,7 @@
 ﻿<Window x:Class="ZeusDesktop.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="MainWindow" Height="600" Width="800" Background="WhiteSmoke" Icon="Bolt.ico">
+        Title="MainWindow" Height="600" Width="800" Background="WhiteSmoke" Icon="App.ico">
     <Window.Resources>
         <Style TargetType="{x:Type Grid}" x:Key="Mask">
             <Setter Property="Visibility" Value="Hidden"></Setter>

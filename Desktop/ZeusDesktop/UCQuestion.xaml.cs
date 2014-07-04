@@ -14,7 +14,6 @@ namespace ZeusDesktop
         public event EventHandler<QuestionEventArgs> SaveQuestion;
 
         private ObservableCollection<Options> _options = new ObservableCollection<Options>();
-        private int _optionOrder = 0;
 
         public UCQuestion()
         {
@@ -48,11 +47,11 @@ namespace ZeusDesktop
                 {
                     cbbType.SelectedIndex = 2;
                 }
-                _options = new ObservableCollection<Options>(question.Options);
-                lvOptions.ItemsSource = _options;
-                CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(lvOptions.ItemsSource);
-                view.SortDescriptions.Add(new System.ComponentModel.SortDescription("Order", System.ComponentModel.ListSortDirection.Ascending));
             }
+            _options = new ObservableCollection<Options>(question.Options);
+            lvOptions.ItemsSource = _options;
+            CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(lvOptions.ItemsSource);
+            view.SortDescriptions.Add(new System.ComponentModel.SortDescription("Order", System.ComponentModel.ListSortDirection.Ascending));
         }
 
         private void cbbType_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -88,8 +87,7 @@ namespace ZeusDesktop
             {
                 if (!String.IsNullOrEmpty(txtOption.Text))
                 {
-                    _options.Add(new Options() { Order = _optionOrder, Option = txtOption.Text });
-                    _optionOrder++;
+                    _options.Add(new Options() { Order = lvOptions.Items.Count + 1, Option = txtOption.Text });
                     txtOption.Text = String.Empty;
                 }
             }
@@ -106,7 +104,10 @@ namespace ZeusDesktop
                     NumAnswers = 1,
                 };
 
-                q.Options.AddRange(_options);
+                if (((ComboBoxItem)cbbType.SelectedValue).Content.ToString() != "Aberta")
+                {
+                    q.Options.AddRange(_options);
+                }
 
                 if (((ComboBoxItem)cbbType.SelectedValue).Content.ToString() == "Aberta")
                 {
@@ -170,6 +171,11 @@ namespace ZeusDesktop
                 if (lvOptions.SelectedIndex >= 0)
                 {
                     _options.Remove((Options)lvOptions.SelectedItem);
+
+                    for (int i = 0; i < lvOptions.Items.Count; i++)
+                    {
+                        ((Options)lvOptions.Items[i]).Order = i + i;
+                    }
                 }
             }
         }
