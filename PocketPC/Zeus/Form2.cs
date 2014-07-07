@@ -19,6 +19,7 @@ namespace Zeus
         {
             InitializeComponent();
             LoadSurveys();
+            inputPanel1.Enabled = false;
         }
 
         private void LoadSurveys()
@@ -62,7 +63,6 @@ namespace Zeus
             {
                 cbbPesquisadores.Items.Add(dr["Name"]);
             }
-            inputPanel1.Enabled = false;
         }
 
         private void menuItem1_Click(object sender, EventArgs e)

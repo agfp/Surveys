@@ -21,7 +21,6 @@ namespace Zeus
         private TextBox _textBox;
         private List<RadioButton> _radioButtonList;
         private List<CheckBox> _checkBoxList;
-        private int _checkedCheckboxes;
         private static int _goTo = -1;
 
         #endregion
@@ -75,49 +74,6 @@ namespace Zeus
             }
         }
 
-        private void option_Click(object sender, EventArgs e)
-        {
-            if (_currentIndex == Interview.Survey.Questions.Rows.Count - 1)
-            {
-                return;
-            }
-
-            var type = Convert.ToInt32(Interview.Survey.Questions.Rows[_currentIndex]["Type"]);
-            if (type == 2)
-            {
-                var numAnswers = Convert.ToInt32(Interview.Survey.Questions.Rows[_currentIndex]["NumAnswers"]);
-                var chk = sender as CheckBox;
-                if (chk.Checked)
-                {
-                    _checkedCheckboxes++;
-                }
-                else
-                {
-                    _checkedCheckboxes--;
-                }
-                if (_checkedCheckboxes == numAnswers)
-                {
-                    NextQuestion();
-                }
-            }
-            else if (type == 3)
-            {
-                NextQuestion();
-            }
-            else if (type == 4)
-            {
-                var rdb = sender as RadioButton;
-                if (Convert.ToInt32(rdb.Tag) != _radioButtonList.Count)
-                {
-                    NextQuestion();
-                }
-                else
-                {
-                    _textBox.Focus();
-                }
-            }
-        }
-
         private void _textBox_GotFocus(object sender, EventArgs e)
         {
             inputPanel1.Enabled = true;
@@ -147,6 +103,7 @@ namespace Zeus
         {
             if (_currentIndex == Interview.Survey.Questions.Rows.Count)
             {
+                inputPanel1.Enabled = false;
                 EndInterview();
                 return;
             }
@@ -185,9 +142,9 @@ namespace Zeus
             {
                 menuItemNextQuestion.Text = "Próximo";
             }
-            
+
             menuItemPreviousQuestion.Enabled = _currentIndex > 0;
-            menuItemGoTo.Enabled = _currentIndex > 0; 
+            menuItemGoTo.Enabled = _currentIndex > 0;
             inputPanel1.Enabled = false;
             progressBar1.Value = _currentIndex + 1;
             lblHeader.Text = String.Format("Pergunta {0} de {1}", _currentIndex + 1, Interview.Survey.NumberOfQuestions);
@@ -200,7 +157,7 @@ namespace Zeus
             lblQuestion.Height = CFMeasureString.MeasureString(lblQuestion, lblQuestion.Text, lblQuestion.ClientRectangle).Height;
             lblInstructions.Top = lblQuestion.Bottom + 10;
             lblDbInstruction.Top = lblInstructions.Top + 20;
-            
+
             _panel = new Panel();
             _panel.Top = lblDbInstruction.Top;
             _panel.Width = this.Width - 18;
@@ -261,7 +218,6 @@ namespace Zeus
 
             var top = AddRadioButtons();
             var radiobutton = new RadioButton();
-            radiobutton.Click += new EventHandler(option_Click);
             radiobutton.Tag = _radioButtonList.Count + 1;
             radiobutton.Text = "Outro. Especificar:";
             radiobutton.Top = top;
@@ -295,7 +251,6 @@ namespace Zeus
             for (int i = 0; i < options.Count(); i++)
             {
                 Control option = list[i] as Control;
-                option.Click += new EventHandler(option_Click);
                 option.Tag = i + 1;
                 var label = new Label();
                 label.Text = options[i]["Option"].ToString();
