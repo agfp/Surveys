@@ -138,6 +138,10 @@ namespace ZeusDesktop
 		
 		private System.Nullable<int> _CloseEnded;
 		
+		private EntityRef<Interview> _Interview;
+		
+		private EntityRef<Questions> _Questions;
+		
     #region Extensibility Method Definitions
     partial void OnLoaded();
     partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -156,6 +160,8 @@ namespace ZeusDesktop
 		
 		public Answers()
 		{
+			this._Interview = default(EntityRef<Interview>);
+			this._Questions = default(EntityRef<Questions>);
 			OnCreated();
 		}
 		
@@ -190,6 +196,10 @@ namespace ZeusDesktop
 			{
 				if ((this._Question_Id != value))
 				{
+					if (this._Questions.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
 					this.OnQuestion_IdChanging(value);
 					this.SendPropertyChanging();
 					this._Question_Id = value;
@@ -210,6 +220,10 @@ namespace ZeusDesktop
 			{
 				if ((this._Interview_Id != value))
 				{
+					if (this._Interview.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
 					this.OnInterview_IdChanging(value);
 					this.SendPropertyChanging();
 					this._Interview_Id = value;
@@ -259,6 +273,74 @@ namespace ZeusDesktop
 			}
 		}
 		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Interview_Answers", Storage="_Interview", ThisKey="Interview_Id", OtherKey="Id", IsForeignKey=true)]
+		public Interview Interview
+		{
+			get
+			{
+				return this._Interview.Entity;
+			}
+			set
+			{
+				Interview previousValue = this._Interview.Entity;
+				if (((previousValue != value) 
+							|| (this._Interview.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Interview.Entity = null;
+						previousValue.Answers.Remove(this);
+					}
+					this._Interview.Entity = value;
+					if ((value != null))
+					{
+						value.Answers.Add(this);
+						this._Interview_Id = value.Id;
+					}
+					else
+					{
+						this._Interview_Id = default(int);
+					}
+					this.SendPropertyChanged("Interview");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Questions_Answers", Storage="_Questions", ThisKey="Question_Id", OtherKey="Id", IsForeignKey=true)]
+		public Questions Questions
+		{
+			get
+			{
+				return this._Questions.Entity;
+			}
+			set
+			{
+				Questions previousValue = this._Questions.Entity;
+				if (((previousValue != value) 
+							|| (this._Questions.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Questions.Entity = null;
+						previousValue.Answers.Remove(this);
+					}
+					this._Questions.Entity = value;
+					if ((value != null))
+					{
+						value.Answers.Add(this);
+						this._Question_Id = value.Id;
+					}
+					else
+					{
+						this._Question_Id = default(int);
+					}
+					this.SendPropertyChanged("Questions");
+				}
+			}
+		}
+		
 		public event PropertyChangingEventHandler PropertyChanging;
 		
 		public event PropertyChangedEventHandler PropertyChanged;
@@ -294,6 +376,8 @@ namespace ZeusDesktop
 		
 		private System.Nullable<System.DateTime> _EndTime;
 		
+		private EntitySet<Answers> _Answers;
+		
     #region Extensibility Method Definitions
     partial void OnLoaded();
     partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -310,6 +394,7 @@ namespace ZeusDesktop
 		
 		public Interview()
 		{
+			this._Answers = new EntitySet<Answers>(new Action<Answers>(this.attach_Answers), new Action<Answers>(this.detach_Answers));
 			OnCreated();
 		}
 		
@@ -393,6 +478,19 @@ namespace ZeusDesktop
 			}
 		}
 		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Interview_Answers", Storage="_Answers", ThisKey="Id", OtherKey="Interview_Id")]
+		public EntitySet<Answers> Answers
+		{
+			get
+			{
+				return this._Answers;
+			}
+			set
+			{
+				this._Answers.Assign(value);
+			}
+		}
+		
 		public event PropertyChangingEventHandler PropertyChanging;
 		
 		public event PropertyChangedEventHandler PropertyChanged;
@@ -411,6 +509,18 @@ namespace ZeusDesktop
 			{
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
+		}
+		
+		private void attach_Answers(Answers entity)
+		{
+			this.SendPropertyChanging();
+			entity.Interview = this;
+		}
+		
+		private void detach_Answers(Answers entity)
+		{
+			this.SendPropertyChanging();
+			entity.Interview = null;
 		}
 	}
 	
@@ -695,6 +805,8 @@ namespace ZeusDesktop
 		
 		private EntitySet<Options> _Options;
 		
+		private EntitySet<Answers> _Answers;
+		
     #region Extensibility Method Definitions
     partial void OnLoaded();
     partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -716,6 +828,7 @@ namespace ZeusDesktop
 		public Questions()
 		{
 			this._Options = new EntitySet<Options>(new Action<Options>(this.attach_Options), new Action<Options>(this.detach_Options));
+			this._Answers = new EntitySet<Answers>(new Action<Answers>(this.attach_Answers), new Action<Answers>(this.detach_Answers));
 			OnCreated();
 		}
 		
@@ -852,6 +965,19 @@ namespace ZeusDesktop
 			}
 		}
 		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Questions_Answers", Storage="_Answers", ThisKey="Id", OtherKey="Question_Id")]
+		public EntitySet<Answers> Answers
+		{
+			get
+			{
+				return this._Answers;
+			}
+			set
+			{
+				this._Answers.Assign(value);
+			}
+		}
+		
 		public event PropertyChangingEventHandler PropertyChanging;
 		
 		public event PropertyChangedEventHandler PropertyChanged;
@@ -879,6 +1005,18 @@ namespace ZeusDesktop
 		}
 		
 		private void detach_Options(Options entity)
+		{
+			this.SendPropertyChanging();
+			entity.Questions = null;
+		}
+		
+		private void attach_Answers(Answers entity)
+		{
+			this.SendPropertyChanging();
+			entity.Questions = this;
+		}
+		
+		private void detach_Answers(Answers entity)
 		{
 			this.SendPropertyChanging();
 			entity.Questions = null;

@@ -20,6 +20,12 @@ namespace ZeusDesktop
         private ListViewDragDropManager<Questions> _dragMgr;
         private string _filename;
 
+        private enum ViewMode
+        {
+            Edit,
+            Export
+        }
+
         public MainWindow()
         {
             InitializeComponent();
@@ -67,7 +73,7 @@ namespace ZeusDesktop
             grdMask3.Visibility = System.Windows.Visibility.Visible;
             grdAddInterviewer.Visibility = System.Windows.Visibility.Visible;
             txtInterviewerId.Focus();
-            grdInterviewers.Header = "(Adicionar aplicador)";
+            grpInterviewers.Header = "(Adicionar aplicador)";
 
             borderInterview.BorderThickness = new Thickness(2);
             borderInterview.CornerRadius = new CornerRadius(5);
@@ -147,6 +153,7 @@ namespace ZeusDesktop
                 _interviewers = new ObservableCollection<Interviewers>();
                 lvInterviewers.ItemsSource = _interviewers;
                 lvQuestions.ItemsSource = _questions;
+                SetViewMode(ViewMode.Edit);
             }
         }
 
@@ -220,6 +227,26 @@ namespace ZeusDesktop
             Printing.Print(txtSurveyName.Text, _questions.ToList());
         }
 
+        private void menuExport_Click(object sender, RoutedEventArgs e)
+        {
+            SaveFileDialog dlg = new SaveFileDialog();
+            dlg.InitialDirectory = Path.Combine(System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Zeus");
+            dlg.DefaultExt = ".txt";
+            dlg.Filter = "Arquivos de texto (.txt)|*.txt";
+            bool? result = dlg.ShowDialog();
+
+            if (result == true)
+            {
+                using (var connection = new SqlCeConnection("Data Source = " + _filename))
+                {
+                    DefaultDB db = new DefaultDB(connection);
+                    Export.ToText(db, dlg.FileName);
+                    MessageBox.Show("Questionário exportado com sucesso", "Mensagem", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+            }
+
+        }
+
         #endregion
 
         private void ucQuestion_AddQuestion(object sender, QuestionEventArgs e)
@@ -251,7 +278,7 @@ namespace ZeusDesktop
             grdMask2.Visibility = System.Windows.Visibility.Hidden;
             grdMask3.Visibility = System.Windows.Visibility.Hidden;
             grdAddInterviewer.Visibility = System.Windows.Visibility.Hidden;
-            grdInterviewers.Header = "Aplicadores";
+            grpInterviewers.Header = "Aplicadores";
 
             borderInterview.BorderThickness = new Thickness(0);
             borderInterview.CornerRadius = new CornerRadius(0);
@@ -266,6 +293,28 @@ namespace ZeusDesktop
                 grdMain.Children.Add(ucQuestion);
                 ucQuestion.SaveQuestion += ucQuestion_EditQuestion;
             }
+        }
+
+        private void SetViewMode(ViewMode viewMode, int n = 0)
+        {
+            bool flag = true;
+            switch (viewMode)
+            {
+                case ViewMode.Export:
+                    lblAnswersWarning.Visibility = System.Windows.Visibility.Visible;
+                    lblAnswersWarning.Content = "Esse questionário foi aplicado " + n + " vezes";
+                    flag = false;
+                    break;
+
+                case ViewMode.Edit:
+                    lblAnswersWarning.Visibility = System.Windows.Visibility.Collapsed;
+                    break;
+            }
+            grpInfo.IsEnabled = flag;
+            grpInterviewers.IsEnabled = flag;
+            grpQuestions.IsEnabled = flag;
+            menuSave.IsEnabled = flag;
+            menuExport.IsEnabled = !flag;
         }
 
         #endregion
@@ -303,6 +352,7 @@ namespace ZeusDesktop
             catch (Exception)
             {
                 MessageBox.Show("Não foi possível abrir o arquivo especificado", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
             }
         }
 
@@ -382,11 +432,19 @@ namespace ZeusDesktop
                 view1.SortDescriptions.Add(new System.ComponentModel.SortDescription("Id", System.ComponentModel.ListSortDirection.Ascending));
 
                 lvQuestions.ItemsSource = _questions;
+
+                if (db.Interview.Count() > 0)
+                {
+                    SetViewMode(ViewMode.Export, db.Interview.Count());
+                }
+                else
+                {
+                    SetViewMode(ViewMode.Edit);
+                }
             }
         }
 
         #endregion
-
 
     }
 }

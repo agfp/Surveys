@@ -110,7 +110,8 @@
     <Compile Include="DragAndDrop\DragAdorner.cs" />
     <Compile Include="DragAndDrop\ListViewDragDropManager.cs" />
     <Compile Include="DragAndDrop\MouseUtilities.cs" />
-    <Compile Include="Printing\Printing.cs" />
+    <Compile Include="Static\Export.cs" />
+    <Compile Include="Static\Printing.cs" />
     <Compile Include="UCQuestion.xaml.cs">
       <DependentUpon>UCQuestion.xaml</DependentUpon>
     </Compile>
@@ -153,6 +154,7 @@
     <None Include="ZeusDesktop_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Images\txt-32.png" />
     <Resource Include="App.ico" />
     <Resource Include="Images\add.png" />
     <Resource Include="Images\delete.png" />

@@ -14,7 +14,7 @@
             <RowDefinition Height="222*"/>
         </Grid.RowDefinitions>
         <Menu IsMainMenu="True">
-            <MenuItem Name="menuNew" Click="menuNew_Click">
+            <MenuItem Name="menuNew" Click="menuNew_Click" Padding="5">
                 <MenuItem.Header>
                     <Image Source="Images/document-new.png" Height="32" Width="32"/>
                 </MenuItem.Header>
@@ -22,7 +22,7 @@
                     Novo
                 </MenuItem.ToolTip>
             </MenuItem>
-            <MenuItem Name="menuOpen" Click="menuOpen_Click">
+            <MenuItem Name="menuOpen" Click="menuOpen_Click" Padding="5">
                 <MenuItem.Header>
                     <Image Source="Images/document-open.png" Height="32" Width="32"/>
                 </MenuItem.Header>
@@ -30,7 +30,7 @@
                     Abrir
                 </MenuItem.ToolTip>
             </MenuItem>
-            <MenuItem Name="menuSave" Click="menuSave_Click">
+            <MenuItem Name="menuSave" Click="menuSave_Click" Padding="5">
                 <MenuItem.Header>
                     <Image Source="Images/document-save.png" Height="32" Width="32"/>
                 </MenuItem.Header>
@@ -38,7 +38,7 @@
                     Salvar
                 </MenuItem.ToolTip>
             </MenuItem>
-            <MenuItem Name="menuSaveAs" Click="menuSaveAs_Click">
+            <MenuItem Name="menuSaveAs" Click="menuSaveAs_Click" Padding="5">
                 <MenuItem.Header>
                     <Image Source="Images/document-save-as.png" Height="32" Width="32"/>
                 </MenuItem.Header>
@@ -46,20 +46,20 @@
                     Salvar como...
                 </MenuItem.ToolTip>
             </MenuItem>
-            <MenuItem Name="menuPrint" Click="menuPrint_Click">
+            <MenuItem Name="menuPrint" Click="menuPrint_Click" Padding="5">
                 <MenuItem.Header>
                     <Image Source="Images/document-print.png" Height="32" Width="32"/>
                 </MenuItem.Header>
                 <MenuItem.ToolTip>
-                    Imprimir
+                    Imprimir questionário
                 </MenuItem.ToolTip>
             </MenuItem>
-            <MenuItem Name="menuHelp">
+            <MenuItem Name="menuExport" Click="menuExport_Click" Padding="5">
                 <MenuItem.Header>
-                    <Image Source="Images/system-help.png" Height="32" Width="32"/>
+                    <Image Source="Images/txt-32.png" Height="32" Width="32"/>
                 </MenuItem.Header>
                 <MenuItem.ToolTip>
-                    Ajuda
+                    Exportar respostas
                 </MenuItem.ToolTip>
             </MenuItem>
         </Menu>
@@ -68,25 +68,27 @@
                 <ColumnDefinition Width="66*" />
                 <ColumnDefinition Width="33*" />
             </Grid.ColumnDefinitions>
-            <GroupBox Header="Informações gerais" Padding="5">
+            <GroupBox Name="grpInfo" Header="Informações gerais" Padding="5">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="35"/>
                         <RowDefinition Height="64"/>
                     </Grid.RowDefinitions>
-                    <TextBlock Margin="5">Nome do questionário:</TextBlock>
-                    <TextBlock Grid.Row="1" Margin="5">Descrição:</TextBlock>
-                    <TextBox Name="txtSurveyName" Height="21" Grid.Column="1" VerticalAlignment="Top" Margin="5" MaxLength="100"></TextBox>
-                    <TextBox Name="txtSurveyDescription" Height="50" Grid.Column="1" Grid.Row="1" VerticalAlignment="Top" Margin="5" AcceptsReturn="True" TextWrapping="Wrap"></TextBox>
+                    <TextBlock Grid.Row="1" Margin="5">Nome do questionário:</TextBlock>
+                    <TextBlock Grid.Row="2" Margin="5">Descrição:</TextBlock>
+                    <TextBox Grid.Row="1" Name="txtSurveyName" Height="21" Grid.Column="1" VerticalAlignment="Top" Margin="5" MaxLength="100"></TextBox>
+                    <TextBox Name="txtSurveyDescription" Height="50" Grid.Column="1" Grid.Row="2" VerticalAlignment="Top" Margin="5" AcceptsReturn="True" TextWrapping="Wrap"></TextBox>
+                    <Label Visibility="Collapsed" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10" Name="lblAnswersWarning" Grid.ColumnSpan="2" Foreground="Red" Grid.Row="0" FontWeight="Bold" FontSize="14">Esse questionário foi aplicado 8 vezes</Label>
                 </Grid>
             </GroupBox>
             <Grid Grid.Row="1" Grid.Column="1" Background="#808080"></Grid>
             <Border Name="borderInterview" Background="WhiteSmoke" CornerRadius="0" Padding="0" BorderBrush="{DynamicResource {x:Static SystemColors.WindowFrameBrushKey}}" BorderThickness="0" Grid.Column="1">
-                <GroupBox Name="grdInterviewers" Grid.Column="1" Header="Aplicadores" Padding="5" Background="WhiteSmoke">
+                <GroupBox Name="grpInterviewers" Grid.Column="1" Header="Aplicadores" Padding="5" Background="WhiteSmoke">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
@@ -132,7 +134,7 @@
             </Border>
             <Grid Name="grdMask3" Background="Black" Opacity=".5" Grid.Row="1" Style="{StaticResource Mask}"></Grid>
         </Grid>
-        <GroupBox Header="Perguntas" Grid.Row="2" Padding="5">
+        <GroupBox Name="grpQuestions" Header="Perguntas" Grid.Row="2" Padding="5">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>

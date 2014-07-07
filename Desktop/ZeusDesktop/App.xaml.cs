@@ -16,7 +16,12 @@ namespace ZeusDesktop
         private void Application_Startup(object sender, StartupEventArgs e)
         {
             var home = Path.Combine(System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Zeus");
-            var filename = AppDomain.CurrentDomain.SetupInformation.ActivationArguments.ActivationData[0];
+            string filename = null;
+
+            if (AppDomain.CurrentDomain.SetupInformation.ActivationArguments.ActivationData != null)
+            {
+                filename = AppDomain.CurrentDomain.SetupInformation.ActivationArguments.ActivationData[0];
+            }
 
             try
             {
