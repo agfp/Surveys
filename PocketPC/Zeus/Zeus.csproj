@@ -87,18 +87,6 @@
     </Compile>
     <Compile Include="Global\Export.cs" />
     <Compile Include="Global\Interview.cs" />
-    <Compile Include="OpenFileDialogEx\BackKeyHandler.cs" />
-    <Compile Include="OpenFileDialogEx\MenuItemWithTag.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="OpenFileDialogEx\OpenFileDialogEx.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="OpenFileDialogEx\OpenFileDialogEx.Designer.cs">
-      <DependentUpon>OpenFileDialogEx.cs</DependentUpon>
-    </Compile>
-    <Compile Include="OpenFileDialogEx\Platform.cs" />
-    <Compile Include="OpenFileDialogEx\ShellIconCache.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form1.resx">
@@ -115,10 +103,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Form4.resx">
       <DependentUpon>Form4.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="OpenFileDialogEx\OpenFileDialogEx.resx">
-      <DependentUpon>OpenFileDialogEx.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">

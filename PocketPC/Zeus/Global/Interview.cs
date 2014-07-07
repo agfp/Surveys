@@ -36,7 +36,8 @@ namespace Zeus.Global
         public static void NewInterview(int interviewerId)
         {
             var folder = Zeus.Properties.Resources.LocalInterviewFolder;
-            var filename = Utils.GetSafeFileName(Survey.Name + "_" + DateTime.Now.ToString("yyyy-MM-dd") + ".zeus");
+            var basename = Path.GetFileNameWithoutExtension(_surveyDbPath);
+            var filename = Utils.GetSafeFileName(basename + "_" + DateTime.Now.ToString("yyyy-MM-dd") + ".zeus");
             var fullname = Path.Combine(folder, filename);
 
             if (!Directory.Exists(folder))
@@ -54,7 +55,8 @@ namespace Zeus.Global
         public static void End()
         {
             _currentAnswers.Close();
-            Export.ToText();
+            var basename = Path.GetFileNameWithoutExtension(_surveyDbPath);
+            Export.ToText(basename);
         }
     }
 }

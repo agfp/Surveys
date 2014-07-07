@@ -8,22 +8,22 @@ namespace Zeus.Global
 {
     static class Export
     {
-        public static void ToText()
+        public static void ToText(string basename)
         {
             var localFolder = Zeus.Properties.Resources.LocalInterviewFolder;
-            ExportTo(localFolder);
+            ExportTo(localFolder, basename);
 
             var storageCard = Zeus.Properties.Resources.StorageCard;
             if (Directory.Exists(storageCard))
             {
                 var sdCard = Zeus.Properties.Resources.CardInterviewFolder;
-                ExportTo(sdCard);
+                ExportTo(sdCard, basename);
             }
         }
 
-        private static void ExportTo(string folder)
+        private static void ExportTo(string folder, string basename)
         {
-            var filename = Utils.GetSafeFileName(Interview.Survey.Name + "_" + DateTime.Now.ToString("yyyy-MM-dd") + ".txt");
+            var filename = Utils.GetSafeFileName(basename + "_" + DateTime.Now.ToString("yyyy-MM-dd") + ".txt");
             var fullname = Path.Combine(folder, filename);
 
             if (!Directory.Exists(folder))

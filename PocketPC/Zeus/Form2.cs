@@ -7,20 +7,56 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using Zeus.Global;
+using System.IO;
 
 namespace Zeus
 {
     public partial class Form2 : Form
     {
+        Dictionary<string, string> _fileLocation;
+
         public Form2()
         {
             InitializeComponent();
+            LoadSurveys();
+        }
+
+        private void LoadSurveys()
+        {
+            _fileLocation = new Dictionary<string, string>();
+
+            if (Directory.Exists(Zeus.Properties.Resources.ZeusFolder))
+            {
+                var files = Directory.GetFiles(Zeus.Properties.Resources.ZeusFolder, "*.zeus");
+                foreach (var file in files)
+                {
+                    var friendlyName = Path.GetFileNameWithoutExtension(file);
+                    _fileLocation.Add(friendlyName, file);
+                    cbbFiles.Items.Add(friendlyName);
+                }
+            }
+            if (Directory.Exists(Zeus.Properties.Resources.StorageCard))
+            {
+                var files = Directory.GetFiles(Zeus.Properties.Resources.StorageCard, "*.zeus");
+                foreach (var file in files)
+                {
+                    var friendlyName = "[SD] " + Path.GetFileNameWithoutExtension(file);
+                    _fileLocation.Add(friendlyName, file);
+                    cbbFiles.Items.Add(friendlyName);
+                }
+            }
+        }
+
+        private void cbbFiles_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var friendlyName = cbbFiles.SelectedItem.ToString();
+            var filename = _fileLocation[friendlyName];
+            Interview.OpenSurvey(filename);
             LoadFields();
         }
 
         private void LoadFields()
         {
-            lblNomeQuestionario.Text = Interview.Survey.Name;
             cbbPesquisadores.Items.Clear();
             foreach (DataRow dr in Interview.Survey.Interviewers.Rows)
             {
@@ -36,6 +72,12 @@ namespace Zeus
 
         private void menuItem2_Click(object sender, EventArgs e)
         {
+            if (cbbFiles.SelectedIndex == -1)
+            {
+                MessageBox.Show("Selecione um questionário");
+                return;
+            }
+
             if (cbbPesquisadores.SelectedIndex == -1)
             {
                 MessageBox.Show("Selecione um pesquisador");

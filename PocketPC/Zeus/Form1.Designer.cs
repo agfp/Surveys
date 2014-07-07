@@ -48,7 +48,7 @@
             // 
             // menuItem2
             // 
-            this.menuItem2.Text = "Abrir";
+            this.menuItem2.Text = "Novo";
             this.menuItem2.Click += new System.EventHandler(this.menuItem2_Click);
             // 
             // pictureBox1
@@ -68,7 +68,7 @@
             this.Controls.Add(this.pictureBox1);
             this.Menu = this.mainMenu1;
             this.Name = "Form1";
-            this.Text = "Zeus 1.0 beta 1";
+            this.Text = "Zeus 1.0 beta 2";
             this.ResumeLayout(false);
 
         }
