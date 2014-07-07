@@ -86,7 +86,7 @@ namespace Zeus
 
         private void Form3_GotFocus(object sender, EventArgs e)
         {
-            if (_goTo > 0)
+            if (_goTo >= 0)
             {
                 _currentIndex = _goTo;
                 _goTo = -1;
