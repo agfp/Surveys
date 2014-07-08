@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Documents;
 using System.Windows;
 using System.Windows.Controls;
@@ -111,7 +112,9 @@ namespace ZeusDesktop
 
         private static void AddOptions(Paragraph p, Questions question, OptionControl optionControl)
         {
-            for (int i = 0; i < question.Options.Count; i++)
+            var options = question.Options.OrderBy(o => o.Order);
+
+            for (int i = 0; i < options.Count(); i++)
             {
                 if (i != 0)
                 {
@@ -120,7 +123,7 @@ namespace ZeusDesktop
                 var control = new InlineUIContainer() { Child = optionControl() };
                 p.Inlines.Add(control);
                 p.Inlines.Add(" ");
-                p.Inlines.Add(question.Options[i].Option);
+                p.Inlines.Add(options.ElementAt(i).Option);
             }
         }
     }

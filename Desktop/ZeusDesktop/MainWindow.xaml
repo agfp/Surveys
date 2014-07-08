@@ -1,7 +1,7 @@
 ﻿<Window x:Class="ZeusDesktop.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="MainWindow" Height="600" Width="800" Background="WhiteSmoke" Icon="App.ico">
+        Title="MainWindow" Height="600" Width="800" Background="WhiteSmoke" Icon="App.ico" Closing="Window_Closing" WindowState="Maximized" WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <Style TargetType="{x:Type Grid}" x:Key="Mask">
             <Setter Property="Visibility" Value="Hidden"></Setter>
@@ -81,8 +81,8 @@
                     </Grid.RowDefinitions>
                     <TextBlock Grid.Row="1" Margin="5">Nome do questionário:</TextBlock>
                     <TextBlock Grid.Row="2" Margin="5">Descrição:</TextBlock>
-                    <TextBox Grid.Row="1" Name="txtSurveyName" Height="21" Grid.Column="1" VerticalAlignment="Top" Margin="5" MaxLength="100"></TextBox>
-                    <TextBox Name="txtSurveyDescription" Height="50" Grid.Column="1" Grid.Row="2" VerticalAlignment="Top" Margin="5" AcceptsReturn="True" TextWrapping="Wrap"></TextBox>
+                    <TextBox Grid.Row="1" Name="txtSurveyName" Height="21" Grid.Column="1" VerticalAlignment="Top" Margin="5" MaxLength="100" TextChanged="txtSurveyName_TextChanged"></TextBox>
+                    <TextBox Name="txtSurveyDescription" Height="50" Grid.Column="1" Grid.Row="2" VerticalAlignment="Top" Margin="5" AcceptsReturn="True" TextWrapping="Wrap" TextChanged="txtSurveyDescription_TextChanged"></TextBox>
                     <Label Visibility="Collapsed" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10" Name="lblAnswersWarning" Grid.ColumnSpan="2" Foreground="Red" Grid.Row="0" FontWeight="Bold" FontSize="14">Esse questionário foi aplicado 8 vezes</Label>
                 </Grid>
             </GroupBox>

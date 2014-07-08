@@ -19,6 +19,7 @@ namespace ZeusDesktop
         private ObservableCollection<Questions> _questions = new ObservableCollection<Questions>();
         private ListViewDragDropManager<Questions> _dragMgr;
         private string _filename;
+        private bool _savePending;
 
         private enum ViewMode
         {
@@ -41,17 +42,49 @@ namespace ZeusDesktop
 
         private void ConfigureWindow()
         {
-            Title = "ZeusDesktop (v." + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString() + ") - " + "Novo questionário";
+            SetWindowTitle();
 
+            _interviewers.CollectionChanged += new System.Collections.Specialized.NotifyCollectionChangedEventHandler(_interviewers_CollectionChanged);
             lvInterviewers.ItemsSource = _interviewers;
             CollectionView view1 = (CollectionView)CollectionViewSource.GetDefaultView(lvInterviewers.ItemsSource);
             view1.SortDescriptions.Add(new System.ComponentModel.SortDescription("Id", System.ComponentModel.ListSortDirection.Ascending));
 
+            _questions.CollectionChanged += new System.Collections.Specialized.NotifyCollectionChangedEventHandler(_questions_CollectionChanged);
             lvQuestions.ItemsSource = _questions;
 
             _dragMgr = new ListViewDragDropManager<Questions>(lvQuestions);
             _dragMgr.ShowDragAdorner = true;
             _dragMgr.DragAdornerOpacity = 0.5;
+        }
+
+        private void SetSavePending(bool savePending)
+        {
+            _savePending = savePending;
+            SetWindowTitle(_filename);
+        }
+
+        private void SetWindowTitle(string filename = null)
+        {
+            string title = "ZeusDesktop (v.{0}) - {1}{2}";
+            string version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            string survey, savePending = String.Empty;
+
+
+            if (String.IsNullOrEmpty(filename))
+            {
+                survey = "Novo questionário";
+            }
+            else
+            {
+                survey = Path.GetFileNameWithoutExtension(filename);
+            }
+
+            if (_savePending)
+            {
+                savePending = "*";
+            }
+
+            Title = String.Format(title, version, survey, savePending);
         }
 
         #region Events
@@ -144,16 +177,19 @@ namespace ZeusDesktop
             if (result == MessageBoxResult.Yes)
             {
                 _filename = null;
-                Title = "ZeusDesktop (v." + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString() + ") - " + "Novo questionário";
+                SetWindowTitle();
                 txtSurveyDescription.Text = String.Empty;
                 txtSurveyName.Text = String.Empty;
                 txtInterviewerId.Text = String.Empty;
                 txtInterviewerName.Text = String.Empty;
                 _questions = new ObservableCollection<Questions>();
+                _questions.CollectionChanged += new System.Collections.Specialized.NotifyCollectionChangedEventHandler(_questions_CollectionChanged);
                 _interviewers = new ObservableCollection<Interviewers>();
+                _interviewers.CollectionChanged += new System.Collections.Specialized.NotifyCollectionChangedEventHandler(_interviewers_CollectionChanged);
                 lvInterviewers.ItemsSource = _interviewers;
                 lvQuestions.ItemsSource = _questions;
                 SetViewMode(ViewMode.Edit);
+                SetSavePending(false);
             }
         }
 
@@ -173,7 +209,7 @@ namespace ZeusDesktop
 
         private void menuSave_Click(object sender, RoutedEventArgs e)
         {
-            if (Validate())
+            if (Validate() && _savePending)
             {
                 if (String.IsNullOrEmpty(_filename))
                 {
@@ -195,8 +231,9 @@ namespace ZeusDesktop
                 }
                 CopyDatabase(_filename);
                 ExportData(_filename);
-                Title = "ZeusDesktop (v." + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString() + ") - " + Path.GetFileName(_filename);
-                MessageBox.Show("Questionário salvo com sucesso", "Mensagem", MessageBoxButton.OK, MessageBoxImage.Information);
+                SetWindowTitle(_filename);
+                //MessageBox.Show("Questionário salvo com sucesso", "Mensagem", MessageBoxButton.OK, MessageBoxImage.Information);
+                SetSavePending(false);
             }
         }
 
@@ -216,8 +253,9 @@ namespace ZeusDesktop
                     CopyDatabase(dlg.FileName);
                     ExportData(dlg.FileName);
                     _filename = dlg.FileName;
-                    Title = "ZeusDesktop (v." + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString() + ") - " + Path.GetFileName(_filename);
-                    MessageBox.Show("Questionário salvo com sucesso", "Mensagem", MessageBoxButton.OK, MessageBoxImage.Information);
+                    SetWindowTitle(dlg.FileName);
+                    //MessageBox.Show("Questionário salvo com sucesso", "Mensagem", MessageBoxButton.OK, MessageBoxImage.Information);
+                    Open(dlg.FileName);
                 }
             }
         }
@@ -241,10 +279,34 @@ namespace ZeusDesktop
                 {
                     DefaultDB db = new DefaultDB(connection);
                     Export.ToText(db, dlg.FileName);
-                    MessageBox.Show("Questionário exportado com sucesso", "Mensagem", MessageBoxButton.OK, MessageBoxImage.Information);
+                    //MessageBox.Show("Questionário exportado com sucesso", "Mensagem", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
             }
 
+        }
+
+        #endregion
+
+        #region Save Pending Events
+
+        private void lvInterviewers_SourceUpdated(object sender, DataTransferEventArgs e)
+        {
+            SetSavePending(true);
+        }
+
+        private void lvQuestions_SourceUpdated(object sender, DataTransferEventArgs e)
+        {
+            SetSavePending(true);
+        }
+
+        private void txtSurveyName_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            SetSavePending(true);
+        }
+
+        private void txtSurveyDescription_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            SetSavePending(true);
         }
 
         #endregion
@@ -264,6 +326,19 @@ namespace ZeusDesktop
         private void lvQuestions_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             EditQuestion();
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (_savePending)
+            {
+                var result = MessageBox.Show("Deseja salvar as alterações?", "Pergunta", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                if (result == MessageBoxResult.Yes)
+                {
+                    menuSave_Click(null, null);
+                    e.Cancel = true;
+                }
+            }
         }
 
         #endregion
@@ -347,7 +422,7 @@ namespace ZeusDesktop
             {
                 ImportData(filename);
                 _filename = filename;
-                Title = "ZeusDesktop (v." + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString() + ") - " + Path.GetFileName(filename);
+                SetSavePending(false);
             }
             catch (Exception)
             {
@@ -403,6 +478,7 @@ namespace ZeusDesktop
                 txtSurveyDescription.Text = db.SurveyInfo.First().Description;
 
                 _questions = new ObservableCollection<Questions>();
+                _questions.CollectionChanged += new System.Collections.Specialized.NotifyCollectionChangedEventHandler(_questions_CollectionChanged);
                 foreach (var question in db.Questions)
                 {
                     Questions q = new Questions()
@@ -426,7 +502,7 @@ namespace ZeusDesktop
                 }
 
                 _interviewers = new ObservableCollection<Interviewers>(db.Interviewers);
-
+                _interviewers.CollectionChanged += new System.Collections.Specialized.NotifyCollectionChangedEventHandler(_interviewers_CollectionChanged);
                 lvInterviewers.ItemsSource = _interviewers;
                 CollectionView view1 = (CollectionView)CollectionViewSource.GetDefaultView(lvInterviewers.ItemsSource);
                 view1.SortDescriptions.Add(new System.ComponentModel.SortDescription("Id", System.ComponentModel.ListSortDirection.Ascending));
@@ -442,6 +518,16 @@ namespace ZeusDesktop
                     SetViewMode(ViewMode.Edit);
                 }
             }
+        }
+
+        void _questions_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            SetSavePending(true);
+        }
+
+        void _interviewers_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            SetSavePending(true);
         }
 
         #endregion

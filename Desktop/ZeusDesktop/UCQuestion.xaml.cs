@@ -174,7 +174,7 @@ namespace ZeusDesktop
 
                     for (int i = 0; i < lvOptions.Items.Count; i++)
                     {
-                        ((Options)lvOptions.Items[i]).Order = i + i;
+                        ((Options)lvOptions.Items[i]).Order = i;
                     }
                 }
             }
