@@ -36,8 +36,6 @@ namespace Zeus
         public Form3()
         {
             InitializeComponent();
-            progressBar1.Minimum = 1;
-            progressBar1.Maximum = Interview.Survey.NumberOfQuestions;
             _currentIndex = 0;
             LoadQuestion();
         }
@@ -146,7 +144,6 @@ namespace Zeus
             menuItemPreviousQuestion.Enabled = _currentIndex > 0;
             menuItemGoTo.Enabled = _currentIndex > 0;
             inputPanel1.Enabled = false;
-            progressBar1.Value = _currentIndex + 1;
             lblHeader.Text = String.Format("Pergunta {0} de {1}", _currentIndex + 1, Interview.Survey.NumberOfQuestions);
 
             var question = Interview.Survey.Questions.Rows[_currentIndex]["Question"].ToString();

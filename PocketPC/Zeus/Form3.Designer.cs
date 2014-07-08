@@ -36,7 +36,6 @@
             this.menuItemPreviousQuestion = new System.Windows.Forms.MenuItem();
             this.menuItemAbort = new System.Windows.Forms.MenuItem();
             this.menuItemNextQuestion = new System.Windows.Forms.MenuItem();
-            this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.lblHeader = new System.Windows.Forms.Label();
             this.lblQuestion = new System.Windows.Forms.Label();
             this.lblInstructions = new System.Windows.Forms.Label();
@@ -78,24 +77,18 @@
             this.menuItemNextQuestion.Text = "Próximo";
             this.menuItemNextQuestion.Click += new System.EventHandler(this.menuItemNextQuestion_Click);
             // 
-            // progressBar1
-            // 
-            this.progressBar1.Location = new System.Drawing.Point(3, 3);
-            this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(221, 20);
-            // 
             // lblHeader
             // 
             this.lblHeader.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Bold);
             this.lblHeader.ForeColor = System.Drawing.SystemColors.ActiveBorder;
-            this.lblHeader.Location = new System.Drawing.Point(3, 26);
+            this.lblHeader.Location = new System.Drawing.Point(3, 3);
             this.lblHeader.Name = "lblHeader";
             this.lblHeader.Size = new System.Drawing.Size(191, 20);
             this.lblHeader.Text = "Pergunta N de M";
             // 
             // lblQuestion
             // 
-            this.lblQuestion.Location = new System.Drawing.Point(3, 46);
+            this.lblQuestion.Location = new System.Drawing.Point(3, 24);
             this.lblQuestion.Name = "lblQuestion";
             this.lblQuestion.Size = new System.Drawing.Size(221, 34);
             this.lblQuestion.Text = "Qual a cor do cavalo branco de Napoleão?";
@@ -104,7 +97,7 @@
             // 
             this.lblInstructions.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Bold);
             this.lblInstructions.ForeColor = System.Drawing.SystemColors.ActiveBorder;
-            this.lblInstructions.Location = new System.Drawing.Point(3, 90);
+            this.lblInstructions.Location = new System.Drawing.Point(3, 58);
             this.lblInstructions.Name = "lblInstructions";
             this.lblInstructions.Size = new System.Drawing.Size(221, 20);
             this.lblInstructions.Text = "Instrução padrão";
@@ -126,7 +119,7 @@
             // 
             this.lblDbInstruction.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Bold);
             this.lblDbInstruction.ForeColor = System.Drawing.Color.DarkRed;
-            this.lblDbInstruction.Location = new System.Drawing.Point(3, 110);
+            this.lblDbInstruction.Location = new System.Drawing.Point(3, 78);
             this.lblDbInstruction.Name = "lblDbInstruction";
             this.lblDbInstruction.Size = new System.Drawing.Size(221, 20);
             this.lblDbInstruction.Text = "Instrução personalizada";
@@ -141,7 +134,6 @@
             this.Controls.Add(this.lblDbInstruction);
             this.Controls.Add(this.lblInstructions);
             this.Controls.Add(this.lblHeader);
-            this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.lblQuestion);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.textBox1);
@@ -158,7 +150,6 @@
         private System.Windows.Forms.MenuItem menuItem1;
         private System.Windows.Forms.MenuItem menuItemPreviousQuestion;
         private System.Windows.Forms.MenuItem menuItemNextQuestion;
-        private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.Label lblHeader;
         private System.Windows.Forms.Label lblQuestion;
         private System.Windows.Forms.Label lblInstructions;

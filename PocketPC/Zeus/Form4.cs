@@ -21,6 +21,7 @@ namespace Zeus
         private void menuItem1_Click(object sender, EventArgs e)
         {
             Form3.GoTo = -1;
+            inputPanel1.Enabled = false;
             this.Close();
         }
 
@@ -38,6 +39,7 @@ namespace Zeus
                 return;
             }
             Form3.GoTo = input - 1;
+            inputPanel1.Enabled = false;
             this.Close();
         }
     }
