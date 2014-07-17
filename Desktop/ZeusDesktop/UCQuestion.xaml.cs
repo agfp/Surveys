@@ -6,6 +6,8 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media.Animation;
+using System.Collections.Generic;
+using System.Text;
 
 namespace ZeusDesktop
 {
@@ -13,14 +15,9 @@ namespace ZeusDesktop
     {
         public event EventHandler<QuestionEventArgs> SaveQuestion;
 
-        private ObservableCollection<Options> _options = new ObservableCollection<Options>();
-
         public UCQuestion()
         {
             InitializeComponent();
-            lvOptions.ItemsSource = _options;
-            CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(lvOptions.ItemsSource);
-            view.SortDescriptions.Add(new System.ComponentModel.SortDescription("Order", System.ComponentModel.ListSortDirection.Ascending));
             Storyboard sb4 = this.FindResource("Storyboard4") as Storyboard;
             sb4.Begin();
         }
@@ -47,11 +44,14 @@ namespace ZeusDesktop
                 {
                     cbbType.SelectedIndex = 2;
                 }
+
+                var options = new StringBuilder();
+                foreach (var o in question.Options)
+                {
+                    options.AppendLine(o.Option);
+                }
+                txtOptions.Text = options.ToString();
             }
-            _options = new ObservableCollection<Options>(question.Options);
-            lvOptions.ItemsSource = _options;
-            CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(lvOptions.ItemsSource);
-            view.SortDescriptions.Add(new System.ComponentModel.SortDescription("Order", System.ComponentModel.ListSortDirection.Ascending));
         }
 
         private void cbbType_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -81,18 +81,6 @@ namespace ZeusDesktop
             ((Grid)this.Parent).Children.Remove(this);
         }
 
-        private void txtOption_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Enter)
-            {
-                if (!String.IsNullOrEmpty(txtOption.Text))
-                {
-                    _options.Add(new Options() { Order = lvOptions.Items.Count + 1, Option = txtOption.Text });
-                    txtOption.Text = String.Empty;
-                }
-            }
-        }
-
         private void btnSave_Click(object sender, RoutedEventArgs e)
         {
             if (Validate())
@@ -106,7 +94,20 @@ namespace ZeusDesktop
 
                 if (((ComboBoxItem)cbbType.SelectedValue).Content.ToString() != "Aberta")
                 {
-                    q.Options.AddRange(_options);
+                    string[] delimiters = { Environment.NewLine };
+                    string[] options = txtOptions.Text.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
+
+                    foreach (var option in options)
+                    {
+                        if (!String.IsNullOrWhiteSpace(option))
+                        {
+                            q.Options.Add(new Options()
+                            {
+                                Order = q.Options.Count,
+                                Option = option
+                            });
+                        }
+                    }
                 }
 
                 if (((ComboBoxItem)cbbType.SelectedValue).Content.ToString() == "Aberta")
@@ -134,6 +135,22 @@ namespace ZeusDesktop
 
         private bool Validate()
         {
+            var optionsList = new List<Options>();
+            string[] delimiters = { Environment.NewLine };
+            string[] options = txtOptions.Text.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
+
+            foreach (var option in options)
+            {
+                if (!String.IsNullOrWhiteSpace(option))
+                {
+                    optionsList.Add(new Options()
+                    {
+                        Order = optionsList.Count,
+                        Option = option
+                    });
+                }
+            }
+
             if (String.IsNullOrEmpty(txtQuestion.Text))
             {
                 MessageBox.Show("Preencha o campo pergunta", "Aviso", MessageBoxButton.OK, MessageBoxImage.Exclamation);
@@ -141,7 +158,7 @@ namespace ZeusDesktop
             }
             if (((ComboBoxItem)cbbType.SelectedValue).Content.ToString() != "Aberta")
             {
-                if (_options.Count < 2)
+                if (optionsList.Count < 2)
                 {
                     MessageBox.Show("Inclua pelo menos duas opções", "Aviso", MessageBoxButton.OK, MessageBoxImage.Exclamation);
                     return false;
@@ -155,29 +172,14 @@ namespace ZeusDesktop
                     MessageBox.Show("Digite o número de opções que o usuário pode escolher", "Aviso", MessageBoxButton.OK, MessageBoxImage.Exclamation);
                     return false;
                 }
-                if (numAnswers < 1 || numAnswers > _options.Count)
+                if (numAnswers < 1 || numAnswers > optionsList.Count)
                 {
-                    MessageBox.Show("Número de respostas deve estar entre 1 e " + _options.Count, "Aviso", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                    var message = String.Format("Você pediu {0} resposta(s), mas criou apenas {1} opções. Crie pelo menos {0} opções.", txtNumAnswers.Text, optionsList.Count);
+                    MessageBox.Show(message, "Aviso", MessageBoxButton.OK, MessageBoxImage.Exclamation);
                     return false;
                 }
             }
             return true;
-        }
-
-        private void lvOptions_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Delete)
-            {
-                if (lvOptions.SelectedIndex >= 0)
-                {
-                    _options.Remove((Options)lvOptions.SelectedItem);
-
-                    for (int i = 0; i < lvOptions.Items.Count; i++)
-                    {
-                        ((Options)lvOptions.Items[i]).Order = i;
-                    }
-                }
-            }
         }
     }
 

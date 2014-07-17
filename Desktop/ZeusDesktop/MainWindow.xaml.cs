@@ -8,8 +8,10 @@ using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using WPF.JoshSmith.ServiceProviders.UI;
 using System.Windows.Documents;
+using System.Collections.Generic;
+using System.Windows.Controls.Primitives;
+using System.Windows.Media;
 
 namespace ZeusDesktop
 {
@@ -17,7 +19,6 @@ namespace ZeusDesktop
     {
         private ObservableCollection<Interviewers> _interviewers = new ObservableCollection<Interviewers>();
         private ObservableCollection<Questions> _questions = new ObservableCollection<Questions>();
-        private ListViewDragDropManager<Questions> _dragMgr;
         private string _filename;
         private bool _savePending;
 
@@ -51,10 +52,6 @@ namespace ZeusDesktop
 
             _questions.CollectionChanged += new System.Collections.Specialized.NotifyCollectionChangedEventHandler(_questions_CollectionChanged);
             lvQuestions.ItemsSource = _questions;
-
-            _dragMgr = new ListViewDragDropManager<Questions>(lvQuestions);
-            _dragMgr.ShowDragAdorner = true;
-            _dragMgr.DragAdornerOpacity = 0.5;
         }
 
         private void SetSavePending(bool savePending)
@@ -164,6 +161,74 @@ namespace ZeusDesktop
             if (lvQuestions.SelectedItem != null)
             {
                 _questions.Remove((Questions)lvQuestions.SelectedItem);
+            }
+        }
+
+        private void btnMoveUp_Click(object sender, RoutedEventArgs e)
+        {
+            if (lvQuestions.SelectedItems.Count == 0)
+            {
+                return;
+            }
+
+            int first = -1;
+            for (int i = 0; i < lvQuestions.Items.Count; i++)
+            {
+                var item = lvQuestions.Items[i];
+                var selected = lvQuestions.SelectedItems;
+                if (selected.Contains(item))
+                {
+                    var index = lvQuestions.Items.IndexOf(item);
+                    first = first == -1 ? index : first;
+                    if (index == 0)
+                    {
+                        return;
+                    }
+                    _questions.RemoveAt(index);
+                    _questions.Insert(index - 1, (Questions)item);
+                    lvQuestions.SelectedItems.Add(item);
+                }
+            }
+            if (!IsQuestionVisible(first))
+            {
+                ScrollQuestionsTo(first);
+            }
+        }
+
+        private void btnMoveDown_Click(object sender, RoutedEventArgs e)
+        {
+            if (lvQuestions.SelectedItems.Count == 0)
+            {
+                return;
+            }
+
+            int last = -1;
+            var selectedItems = new List<Questions>();
+
+            for (int i = lvQuestions.Items.Count - 1; i >= 0; i--)
+            {
+                var item = lvQuestions.Items[i];
+                var selected = lvQuestions.SelectedItems;
+                if (selected.Contains(item))
+                {
+                    var index = lvQuestions.Items.IndexOf(item);
+                    last = last == -1 ? index : last;
+                    if (index == lvQuestions.Items.Count - 1)
+                    {
+                        return;
+                    }
+                    _questions.Insert(index + 2, (Questions)item);
+                    _questions.RemoveAt(index);
+                    selectedItems.Add((Questions)item);
+                }
+            }
+            foreach (var item in selectedItems)
+            {
+                lvQuestions.SelectedItems.Add(item);
+            }
+            if (!IsQuestionVisible(last))
+            {
+                ScrollQuestionsTo(last);
             }
         }
 
@@ -311,6 +376,19 @@ namespace ZeusDesktop
 
         #endregion
 
+        private void lvQuestions_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            var grid = lvQuestions.View as GridView;
+            grid.Columns[0].Width = lvQuestions.ActualWidth - 30;
+        }
+
+        private void lvInterviewers_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            var grid = lvInterviewers.View as GridView;
+            grid.Columns[0].Width = 50;
+            grid.Columns[1].Width = lvInterviewers.ActualWidth - 80;
+        }
+
         private void ucQuestion_AddQuestion(object sender, QuestionEventArgs e)
         {
             _questions.Add(e.Question);
@@ -390,6 +468,65 @@ namespace ZeusDesktop
             grpQuestions.IsEnabled = flag;
             menuSave.IsEnabled = flag;
             menuExport.IsEnabled = !flag;
+        }
+
+        public static T GetVisualChild<T>(DependencyObject referenceVisual) where T : Visual
+        {
+            Visual child = null;
+            int childCount = VisualTreeHelper.GetChildrenCount(referenceVisual);
+
+            for (int i = 0; i < childCount; i++)
+            {
+                child = VisualTreeHelper.GetChild(referenceVisual, i) as Visual;
+
+                if (child != null && child is T)
+                {
+                    break;
+                }
+                else if (child != null)
+                {
+                    child = GetVisualChild<T>(child);
+                    if (child != null && child is T) break;
+                }
+            }
+            return child as T;
+        }
+
+        private bool IsQuestionVisible(int index)
+        {
+            ScrollViewer scrollViewer = GetVisualChild<ScrollViewer>(lvQuestions);
+            if (scrollViewer != null)
+            {
+                ScrollBar scrollBar = scrollViewer.Template.FindName("PART_VerticalScrollBar", scrollViewer) as ScrollBar;
+                if (scrollBar != null)
+                {
+                    var first = Math.Ceiling(scrollViewer.VerticalOffset);
+                    var last = Math.Floor(scrollViewer.VerticalOffset + scrollViewer.ViewportHeight);
+
+                    if (index > first && index < last)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        private void ScrollQuestionsTo(int index)
+        {
+            VirtualizingStackPanel vsp =
+              (VirtualizingStackPanel)typeof(ItemsControl).InvokeMember("_itemsHost",
+               BindingFlags.Instance | BindingFlags.GetField | BindingFlags.NonPublic, null,
+               lvQuestions, null);
+
+            double scrollHeight = vsp.ScrollOwner.ScrollableHeight;
+            double offset = scrollHeight * index / lvQuestions.Items.Count;
+
+            vsp.SetVerticalOffset(offset);
         }
 
         #endregion

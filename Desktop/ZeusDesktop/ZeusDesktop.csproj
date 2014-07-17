@@ -26,7 +26,7 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>14</ApplicationRevision>
+    <ApplicationRevision>17</ApplicationRevision>
     <ApplicationVersion>0.1.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -107,9 +107,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>DefaultDB.dbml</DependentUpon>
     </Compile>
-    <Compile Include="DragAndDrop\DragAdorner.cs" />
-    <Compile Include="DragAndDrop\ListViewDragDropManager.cs" />
-    <Compile Include="DragAndDrop\MouseUtilities.cs" />
     <Compile Include="Static\Export.cs" />
     <Compile Include="Static\Printing.cs" />
     <Compile Include="UCQuestion.xaml.cs">
@@ -154,6 +151,24 @@
     <None Include="ZeusDesktop_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Images\print-48.png" />
+    <Resource Include="Images\save-48.png" />
+    <Resource Include="Images\save_as-48.png" />
+    <Resource Include="Images\add_database-48.png" />
+    <Resource Include="Images\add_file-48.png" />
+    <Resource Include="Images\opened_folder-48.png" />
+    <Resource Include="Images\add_user-48.png" />
+    <Resource Include="Images\Add_Row-48.png" />
+    <Resource Include="Images\plus2_math-48.png" />
+    <Resource Include="Images\plus-48.png" />
+    <Resource Include="Images\edit-48.png" />
+    <Resource Include="Images\delete-48.png" />
+    <Resource Include="Images\txt-48.png" />
+    <Resource Include="Images\Button-Delete-icon.png" />
+    <Resource Include="Images\Arrows-Down-circular-icon.png" />
+    <Resource Include="Images\Arrows-Down-icon.png" />
+    <Resource Include="Images\Arrows-Up-circular-icon.png" />
+    <Resource Include="Images\Arrows-Up-icon.png" />
     <Resource Include="Images\txt-32.png" />
     <Resource Include="App.ico" />
     <Resource Include="Images\add.png" />
