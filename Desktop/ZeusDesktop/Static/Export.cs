@@ -38,13 +38,13 @@ namespace ZeusDesktop
                 }
                 else
                 {
-                    text.Append("-;-;");
+                    text.Append("-;");
                 }
                 text.Append(interview.Interviewer_Id + ";");
 
-                var questions = (from o in interview.Answers
-                                 orderby o.Questions.Order
-                                 select o.Questions).Distinct();
+                var questions = from o in db.Questions
+                                orderby o.Order
+                                select o;
 
                 foreach (var question in questions)
                 {
