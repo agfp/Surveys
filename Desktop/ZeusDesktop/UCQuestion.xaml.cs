@@ -87,8 +87,8 @@ namespace ZeusDesktop
             {
                 Questions q = new Questions()
                 {
-                    Question = txtQuestion.Text,
-                    Instruction = txtInstruction.Text,
+                    Question = txtQuestion.Text.Trim(),
+                    Instruction = txtInstruction.Text.Trim(),
                     NumAnswers = 1,
                 };
 
@@ -104,7 +104,7 @@ namespace ZeusDesktop
                             q.Options.Add(new Options()
                             {
                                 Order = q.Options.Count,
-                                Option = option
+                                Option = option.Trim()
                             });
                         }
                     }

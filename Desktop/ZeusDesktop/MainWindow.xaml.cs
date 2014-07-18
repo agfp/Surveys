@@ -382,7 +382,8 @@ namespace ZeusDesktop
         private void lvQuestions_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             var grid = lvQuestions.View as GridView;
-            grid.Columns[0].Width = lvQuestions.ActualWidth - 30;
+            grid.Columns[0].Width = 70;
+            grid.Columns[1].Width = lvQuestions.ActualWidth - 100;
         }
 
         private void lvInterviewers_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -664,6 +665,7 @@ namespace ZeusDesktop
         void _questions_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             SetSavePending(true);
+            grpQuestions.Header = String.Format("Perguntas ({0})", _questions.Count);
         }
 
         void _interviewers_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)

@@ -83,9 +83,9 @@ namespace ZeusDesktop
                 if (question.Type == 4)
                 {
                     p.Inlines.Add("\n");
-                    var radiobutton = new InlineUIContainer() { Child = new RadioButton() { Margin = new Thickness(0, 0, 0, -2) } };
-                    p.Inlines.Add(radiobutton);
-                    p.Inlines.Add(" Outro. Especificar: ");
+                    //var radiobutton = new InlineUIContainer() { Child = new RadioButton() { Margin = new Thickness(0, 0, 0, -2) } };
+                    //p.Inlines.Add(radiobutton);
+                    //p.Inlines.Add(" Outro. Especificar: ");
                     AddTextbox(p);
                 }
             }
@@ -106,7 +106,7 @@ namespace ZeusDesktop
         private static void AddTextbox(Paragraph p)
         {
             InlineUIContainer textbox = new InlineUIContainer();
-            textbox.Child = new TextBox() { Width = 200, HorizontalAlignment = HorizontalAlignment.Left, Margin = new Thickness(0, 0, 0, -8) };
+            textbox.Child = new TextBox() { Width = 200, HorizontalAlignment = HorizontalAlignment.Left /*, Margin = new Thickness(0, 0, 0, -8)*/ };
             p.Inlines.Add(textbox);
         }
 
