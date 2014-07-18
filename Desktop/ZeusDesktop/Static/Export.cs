@@ -38,7 +38,7 @@ namespace ZeusDesktop
                 }
                 else
                 {
-                    text.Append("-;");
+                    text.Append(";");
                 }
                 text.Append(interview.Interviewer_Id + ";");
 
@@ -55,28 +55,43 @@ namespace ZeusDesktop
                     switch (question.Type)
                     {
                         case 1:
-                            text.Append(answers.ElementAt(0).OpenEnded + ";");
+                            if (answers.Count() == 1)
+                            {
+                                text.Append(answers.ElementAt(0).OpenEnded);
+                            }
+                            text.Append(";");
                             break;
 
                         case 2:
-                            var unfilled = question.NumAnswers - answers.Count();
-                            foreach (var option in answers)
+                            for (int i = 0; i < question.NumAnswers; i++)
                             {
-                                text.Append(option.CloseEnded + ";");
-                            }
-                            for (int i = 0; i < unfilled; i++)
-                            {
-                                text.Append("-1;");
+                                var x = answers.Where(a => a.CloseEnded == i + 1);
+                                if (x.Count() == 1)
+                                {
+                                    text.Append(x.Single().CloseEnded);
+                                }
+                                text.Append(";");
                             }
                             break;
 
                         case 3:
-                            text.Append(answers.ElementAt(0).CloseEnded + ";");
+                            if (answers.Count() == 1)
+                            {
+                                text.Append(answers.ElementAt(0).CloseEnded);
+                            }
+                            text.Append(";");
                             break;
 
                         case 4:
-                            text.Append(answers.ElementAt(0).CloseEnded + ";");
-                            text.Append(answers.ElementAt(0).OpenEnded + ";");
+                            if (answers.Count() == 1)
+                            {
+                                text.Append(answers.ElementAt(0).CloseEnded + ";");
+                                text.Append(answers.ElementAt(0).OpenEnded + ";");
+                            }
+                            else
+                            {
+                                text.Append(";;");
+                            }
                             break;
                     }
                 }

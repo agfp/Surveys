@@ -27,7 +27,7 @@ namespace ZeusDesktop
                 Paragraph title = new Paragraph() { FontWeight = FontWeights.Bold, TextAlignment = System.Windows.TextAlignment.Center, FontSize = 22 };
                 fd.Blocks.Add(title);
                 title.Inlines.Add(survey);
-                
+
                 for (int i = 0; i < questions.Count; i++)
                 {
                     CreateQuestion(questions[i], i + 1, fd);
@@ -50,7 +50,7 @@ namespace ZeusDesktop
 
         private static void CreateQuestion(Questions question, int number, FlowDocument doc)
         {
-            Paragraph p = new Paragraph() { KeepTogether = true };
+            Paragraph p = new Paragraph() { KeepTogether = true, TextAlignment = TextAlignment.Left };
             doc.Blocks.Add(p);
             p.SetResourceReference(Control.StyleProperty, "Question");
 
@@ -70,7 +70,7 @@ namespace ZeusDesktop
                     "Selecione até " + question.NumAnswers + " opções",
                     question.Instruction);
 
-                AddOptions(p, question, () => { return new CheckBox(); });
+                AddOptions(p, question, () => { return new CheckBox() { Margin = new Thickness(0, 0, 0, -2) }; });
             }
             else
             {
@@ -78,12 +78,12 @@ namespace ZeusDesktop
                     "Selecione uma opção",
                     question.Instruction);
 
-                AddOptions(p, question, () => { return new RadioButton(); });
+                AddOptions(p, question, () => { return new RadioButton() { Margin = new Thickness(0, 0, 0, -2) }; });
 
                 if (question.Type == 4)
                 {
                     p.Inlines.Add("\n");
-                    var radiobutton = new InlineUIContainer() { Child = new RadioButton() };
+                    var radiobutton = new InlineUIContainer() { Child = new RadioButton() { Margin = new Thickness(0, 0, 0, -2) } };
                     p.Inlines.Add(radiobutton);
                     p.Inlines.Add(" Outro. Especificar: ");
                     AddTextbox(p);
@@ -106,7 +106,7 @@ namespace ZeusDesktop
         private static void AddTextbox(Paragraph p)
         {
             InlineUIContainer textbox = new InlineUIContainer();
-            textbox.Child = new TextBox() { Width = 200, HorizontalAlignment = HorizontalAlignment.Left };
+            textbox.Child = new TextBox() { Width = 200, HorizontalAlignment = HorizontalAlignment.Left, Margin = new Thickness(0, 0, 0, -8) };
             p.Inlines.Add(textbox);
         }
 

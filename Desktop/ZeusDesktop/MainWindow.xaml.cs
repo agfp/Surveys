@@ -52,6 +52,7 @@ namespace ZeusDesktop
 
             _questions.CollectionChanged += new System.Collections.Specialized.NotifyCollectionChangedEventHandler(_questions_CollectionChanged);
             lvQuestions.ItemsSource = _questions;
+            HideAddInterviewerGrid();
         }
 
         private void SetSavePending(bool savePending)
@@ -91,7 +92,7 @@ namespace ZeusDesktop
         private void btnNewQuestion_Click(object sender, RoutedEventArgs e)
         {
             UCQuestion ucQuestion = new UCQuestion();
-            Grid.SetRowSpan(ucQuestion, 3);
+            Grid.SetRowSpan(ucQuestion, 4);
             grdMain.Children.Add(ucQuestion);
             ucQuestion.SaveQuestion += ucQuestion_AddQuestion;
         }
@@ -103,7 +104,9 @@ namespace ZeusDesktop
             grdMask3.Visibility = System.Windows.Visibility.Visible;
             grdAddInterviewer.Visibility = System.Windows.Visibility.Visible;
             txtInterviewerId.Focus();
-            grpInterviewers.Header = "(Adicionar aplicador)";
+            grpInterviewers.Header = "Adicionar aplicador";
+            grdInterviewer.Background = new SolidColorBrush(Color.FromRgb(128, 128, 128));
+            
 
             borderInterview.BorderThickness = new Thickness(2);
             borderInterview.CornerRadius = new CornerRadius(5);
@@ -427,6 +430,7 @@ namespace ZeusDesktop
         {
             txtInterviewerId.Text = String.Empty;
             txtInterviewerName.Text = String.Empty;
+            grdInterviewer.Background = new SolidColorBrush(Colors.Transparent);
             grdMask1.Visibility = System.Windows.Visibility.Hidden;
             grdMask2.Visibility = System.Windows.Visibility.Hidden;
             grdMask3.Visibility = System.Windows.Visibility.Hidden;
@@ -442,7 +446,7 @@ namespace ZeusDesktop
             if (lvQuestions.SelectedItem != null)
             {
                 UCQuestion ucQuestion = new UCQuestion((Questions)lvQuestions.SelectedItem);
-                Grid.SetRowSpan(ucQuestion, 3);
+                Grid.SetRowSpan(ucQuestion, 4);
                 grdMain.Children.Add(ucQuestion);
                 ucQuestion.SaveQuestion += ucQuestion_EditQuestion;
             }
