@@ -40,9 +40,9 @@
             this.lblQuestion = new System.Windows.Forms.Label();
             this.lblInstructions = new System.Windows.Forms.Label();
             this.inputPanel1 = new Microsoft.WindowsCE.Forms.InputPanel(this.components);
+            this.lblDbInstruction = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.lblDbInstruction = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // mainMenu1
@@ -56,6 +56,7 @@
             this.menuItem1.MenuItems.Add(this.menuItemPreviousQuestion);
             this.menuItem1.MenuItems.Add(this.menuItemAbort);
             this.menuItem1.Text = "Menu";
+            this.menuItem1.Click += new System.EventHandler(this.menuItemNextQuestion_Click);
             // 
             // menuItemGoTo
             // 
@@ -83,7 +84,7 @@
             this.lblHeader.ForeColor = System.Drawing.SystemColors.ActiveBorder;
             this.lblHeader.Location = new System.Drawing.Point(3, 3);
             this.lblHeader.Name = "lblHeader";
-            this.lblHeader.Size = new System.Drawing.Size(191, 20);
+            this.lblHeader.Size = new System.Drawing.Size(171, 20);
             this.lblHeader.Text = "Pergunta N de M";
             // 
             // lblQuestion
@@ -102,19 +103,6 @@
             this.lblInstructions.Size = new System.Drawing.Size(221, 20);
             this.lblInstructions.Text = "Instrução padrão";
             // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(0, 0);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(100, 21);
-            this.textBox1.TabIndex = 4;
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Location = new System.Drawing.Point(0, 0);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(144, 50);
-            // 
             // lblDbInstruction
             // 
             this.lblDbInstruction.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Bold);
@@ -124,6 +112,19 @@
             this.lblDbInstruction.Size = new System.Drawing.Size(221, 20);
             this.lblDbInstruction.Text = "Instrução personalizada";
             // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(195, -1);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(10, 21);
+            this.textBox1.TabIndex = 1;
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Location = new System.Drawing.Point(195, -1);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(11, 22);
+            // 
             // Form3
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -131,33 +132,35 @@
             this.AutoScroll = true;
             this.ClientSize = new System.Drawing.Size(240, 268);
             this.ControlBox = false;
+            this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.lblDbInstruction);
             this.Controls.Add(this.lblInstructions);
             this.Controls.Add(this.lblHeader);
             this.Controls.Add(this.lblQuestion);
-            this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.textBox1);
+            this.KeyPreview = true;
             this.Menu = this.mainMenu1;
             this.Name = "Form3";
             this.Text = "Entrevista";
             this.GotFocus += new System.EventHandler(this.Form3_GotFocus);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form3_KeyDown);
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.MenuItem menuItem1;
-        private System.Windows.Forms.MenuItem menuItemPreviousQuestion;
         private System.Windows.Forms.MenuItem menuItemNextQuestion;
+        private System.Windows.Forms.MenuItem menuItemPreviousQuestion;
+        private System.Windows.Forms.MenuItem menuItem1;
         private System.Windows.Forms.Label lblHeader;
         private System.Windows.Forms.Label lblQuestion;
         private System.Windows.Forms.Label lblInstructions;
         private System.Windows.Forms.MenuItem menuItemAbort;
         private Microsoft.WindowsCE.Forms.InputPanel inputPanel1;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Label lblDbInstruction;
         private System.Windows.Forms.MenuItem menuItemGoTo;
+        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.PictureBox pictureBox1;
     }
 }

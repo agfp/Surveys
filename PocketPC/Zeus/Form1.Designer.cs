@@ -68,7 +68,7 @@
             this.Controls.Add(this.pictureBox1);
             this.Menu = this.mainMenu1;
             this.Name = "Form1";
-            this.Text = "Zeus 1.0 beta 2";
+            this.Text = "Zeus 1.0";
             this.ResumeLayout(false);
 
         }

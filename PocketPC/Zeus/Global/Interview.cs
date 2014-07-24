@@ -35,20 +35,7 @@ namespace Zeus.Global
 
         public static void NewInterview(int interviewerId)
         {
-            var folder = Zeus.Properties.Resources.LocalInterviewFolder;
-            var basename = Path.GetFileNameWithoutExtension(_surveyDbPath);
-            var filename = Utils.GetSafeFileName(basename + "_" + DateTime.Now.ToString("yyyy-MM-dd") + ".zeus");
-            var fullname = Path.Combine(folder, filename);
-
-            if (!Directory.Exists(folder))
-            {
-                Directory.CreateDirectory(folder);
-            }
-            if (!File.Exists(fullname))
-            {
-                File.Copy(_surveyDbPath, fullname);
-            }
-            _interviewDbPath = fullname;
+            _interviewDbPath = _surveyDbPath;
             _currentAnswers = new AnswersAccess(_interviewDbPath, interviewerId);
         }
 

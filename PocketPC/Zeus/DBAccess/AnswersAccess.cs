@@ -59,7 +59,7 @@ namespace Zeus.DBAccess
                     cmd2.Parameters.Add(new SqlCeParameter("@QuestionId", questionId));
                     cmd2.Parameters.Add(new SqlCeParameter("@CloseEnded", answer));
                     cmd2.Parameters.Add(new SqlCeParameter("@OpenEnded", openEnded.Replace(';', '_')));
-                    cmd2.Prepare(); 
+                    cmd2.Prepare();
                     cmd2.ExecuteNonQuery();
                 }
             }
@@ -116,15 +116,14 @@ namespace Zeus.DBAccess
             text.Append(startTime.ToString("s") + ";" + duration + ";");
             text.Append(answersDT.Rows[0]["Interviewer_Id"] + ";");
 
-            var questions = (from o in answersDT.AsEnumerable()
-                             orderby o.Field<int>("Order")
-                             select new
-                             {
-                                 Id = o.Field<int>("Question_Id"),
-                                 Type = o.Field<int>("Type"),
-                                 NumAnswers = o.Field<int?>("NumAnswers")
-                             }
-                            ).Distinct();
+            var questions = from o in Interview.Survey.Questions.AsEnumerable()
+                            orderby o.Field<int>("Order")
+                            select new
+                            {
+                                Id = o.Field<int>("Id"),
+                                Type = o.Field<int>("Type"),
+                                NumAnswers = o.Field<int?>("NumAnswers")
+                            };
 
             foreach (var question in questions)
             {
@@ -140,34 +139,33 @@ namespace Zeus.DBAccess
                 {
                     case 1:
                         text.Append(answer.ElementAt(0).OpenEnded);
+                        text.Append(";");
                         break;
 
                     case 2:
-                        var unfilled = question.NumAnswers - answer.Count();
-                        foreach (var option in answer)
+                        for (int i = 0; i < question.NumAnswers; i++)
                         {
-                            text.Append(option.CloseEnded);
+                            var x = answer.Where(a => a.CloseEnded == i + 1);
+                            if (x.Count() == 1)
+                            {
+                                text.Append(x.Single().CloseEnded);
+                            }
                             text.Append(";");
                         }
-                        for (int i = 0; i < unfilled; i++)
-                        {
-                            text.Append(-1);
-                            text.Append(";");
-                        }
-                        text.Remove(text.Length - 1, 1);
                         break;
 
                     case 3:
                         text.Append(answer.ElementAt(0).CloseEnded);
+                        text.Append(";");
                         break;
 
                     case 4:
                         text.Append(answer.ElementAt(0).CloseEnded);
                         text.Append(";");
                         text.Append(answer.ElementAt(0).OpenEnded);
+                        text.Append(";");
                         break;
                 }
-                text.Append(";");
             }
             text.Remove(text.Length - 1, 1);
             return text.ToString();

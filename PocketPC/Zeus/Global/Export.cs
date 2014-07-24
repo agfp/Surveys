@@ -11,17 +11,19 @@ namespace Zeus.Global
         public static void ToText(string basename)
         {
             var localFolder = Zeus.Properties.Resources.LocalInterviewFolder;
-            ExportTo(localFolder, basename);
-
+            var text = Interview.Answer.ConvertToText();
             var storageCard = Zeus.Properties.Resources.StorageCard;
+
+            ExportTo(localFolder, basename, text);
+            
             if (Directory.Exists(storageCard))
             {
                 var sdCard = Zeus.Properties.Resources.CardInterviewFolder;
-                ExportTo(sdCard, basename);
+                ExportTo(sdCard, basename, text);
             }
         }
 
-        private static void ExportTo(string folder, string basename)
+        private static void ExportTo(string folder, string basename, string text)
         {
             var filename = Utils.GetSafeFileName(basename + "_" + DateTime.Now.ToString("yyyy-MM-dd") + ".txt");
             var fullname = Path.Combine(folder, filename);
@@ -34,7 +36,7 @@ namespace Zeus.Global
             {
                 File.Create(filename).Dispose();
             }
-            var text = Interview.Answer.ConvertToText();
+
             using (var stream = File.AppendText(fullname))
             {
                 stream.WriteLine(text);

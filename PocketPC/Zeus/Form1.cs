@@ -17,16 +17,16 @@ namespace Zeus
             InitializeComponent();
         }
 
-        private void menuItem1_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
-
         private void menuItem2_Click(object sender, EventArgs e)
         {
             Form2 frm2 = new Form2();
             frm2.Owner = this;
             frm2.Show();
+        }
+
+        private void menuItem1_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 }
