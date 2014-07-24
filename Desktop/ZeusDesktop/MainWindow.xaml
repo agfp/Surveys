@@ -8,76 +8,77 @@
             <Setter Property="Visibility" Value="Hidden"></Setter>
         </Style>
         <local:QuestionTypeConverter x:Key="QuestionTypeConverter" />
+        <local:IndexConverter x:Key="IndexConverter" />
     </Window.Resources>
     <Grid Name="grdMain">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
-			<RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Menu IsMainMenu="True">
-            <MenuItem Name="menuNew" Click="menuNew_Click" Padding="5" Margin="4" Width="75">
+            <MenuItem Name="menuNew" Click="menuNew_Click" Padding="5" Width="75">
                 <MenuItem.Header>
-					<StackPanel>
-                    <Image Source="Images/add_database-48.png" Height="40" Width="40" HorizontalAlignment="Center"/>
-					<TextBlock HorizontalAlignment="Center">Novo</TextBlock>
-					</StackPanel>
+                    <StackPanel>
+                        <Image Source="Images/document-new.png" Height="40" Width="40" HorizontalAlignment="Center"/>
+                        <TextBlock HorizontalAlignment="Center">Novo</TextBlock>
+                    </StackPanel>
                 </MenuItem.Header>
                 <MenuItem.ToolTip>
                     Novo
                 </MenuItem.ToolTip>
             </MenuItem>
-            <MenuItem Name="menuOpen" Click="menuOpen_Click" Padding="5" Margin="4" Width="75">
+            <MenuItem Name="menuOpen" Click="menuOpen_Click" Padding="5" Width="75">
                 <MenuItem.Header>
-					<StackPanel>
-                    <Image Source="Images/opened_folder-48.png" Height="40" Width="40" HorizontalAlignment="Center"/>
-					<TextBlock HorizontalAlignment="Center">Abrir</TextBlock>
-					</StackPanel>
+                    <StackPanel>
+                        <Image Source="Images/document-open.png" Height="40" Width="40" HorizontalAlignment="Center"/>
+                        <TextBlock HorizontalAlignment="Center">Abrir</TextBlock>
+                    </StackPanel>
                 </MenuItem.Header>
                 <MenuItem.ToolTip>
                     Abrir
                 </MenuItem.ToolTip>
             </MenuItem>
-            <MenuItem Name="menuSave" Click="menuSave_Click" Padding="5" Margin="4" Width="75">
+            <MenuItem Name="menuSave" Click="menuSave_Click" Padding="5" Width="75">
                 <MenuItem.Header>
-					<StackPanel>
-                    <Image Source="Images/save-48.png" Height="40" Width="40" HorizontalAlignment="Center"/>
-					<TextBlock HorizontalAlignment="Center">Salvar</TextBlock>
-					</StackPanel>
+                    <StackPanel>
+                        <Image Source="Images/document-save.png" Height="40" Width="40" HorizontalAlignment="Center"/>
+                        <TextBlock HorizontalAlignment="Center">Salvar</TextBlock>
+                    </StackPanel>
                 </MenuItem.Header>
                 <MenuItem.ToolTip>
                     Salvar
                 </MenuItem.ToolTip>
             </MenuItem>
-            <MenuItem Name="menuSaveAs" Click="menuSaveAs_Click" Padding="5" Margin="4" Width="75">
+            <MenuItem Name="menuSaveAs" Click="menuSaveAs_Click" Padding="5" Width="75">
                 <MenuItem.Header>
-					<StackPanel>
-                    <Image Source="Images/save_as-48.png" Height="40" Width="40" HorizontalAlignment="Center"/>
-					<TextBlock HorizontalAlignment="Center">Salvar como</TextBlock>
-					</StackPanel>
+                    <StackPanel>
+                        <Image Source="Images/document-save-as.png" Height="40" Width="40" HorizontalAlignment="Center"/>
+                        <TextBlock HorizontalAlignment="Center">Salvar como</TextBlock>
+                    </StackPanel>
                 </MenuItem.Header>
                 <MenuItem.ToolTip>
                     Salvar como...
                 </MenuItem.ToolTip>
             </MenuItem>
-            <MenuItem Name="menuPrint" Click="menuPrint_Click" Padding="5" Margin="4" Width="75">
+            <MenuItem Name="menuPrint" Click="menuPrint_Click" Padding="5" Width="75">
                 <MenuItem.Header>
-					<StackPanel>
-                    <Image Source="Images/print-48.png" Height="40" Width="40" HorizontalAlignment="Center"/>
-					<TextBlock HorizontalAlignment="Center">Imprimir</TextBlock>
-					</StackPanel>
+                    <StackPanel>
+                        <Image Source="Images/document-print.png" Height="40" Width="40" HorizontalAlignment="Center"/>
+                        <TextBlock HorizontalAlignment="Center">Imprimir</TextBlock>
+                    </StackPanel>
                 </MenuItem.Header>
                 <MenuItem.ToolTip>
                     Imprimir questionário
                 </MenuItem.ToolTip>
             </MenuItem>
-            <MenuItem Name="menuExport" Click="menuExport_Click" Padding="5" Margin="4" IsEnabled="False" Width="75">
+            <MenuItem Name="menuExport" Click="menuExport_Click" IsEnabled="False" Padding="5" Width="75">
                 <MenuItem.Header>
-					<StackPanel>
-                    <Image Source="Images/txt-48.png" Height="40" Width="40" HorizontalAlignment="Center"/>
-					<TextBlock HorizontalAlignment="Center">Exportar</TextBlock>
-					</StackPanel>
+                    <StackPanel>
+                        <Image Source="Images/txt-48.png" Height="40" Width="40" HorizontalAlignment="Center"/>
+                        <TextBlock HorizontalAlignment="Center">Exportar</TextBlock>
+                    </StackPanel>
                 </MenuItem.Header>
                 <MenuItem.ToolTip>
                     Exportar respostas
@@ -200,13 +201,11 @@
                     </Button>
                 </StackPanel>
                 <ListView Name="lvQuestions" Grid.Column="1" MouseDoubleClick="lvQuestions_MouseDoubleClick" SizeChanged="lvQuestions_SizeChanged">
-                    <!--<ListView.Resources>
-                        <Style TargetType="GridViewColumnHeader">
-                            <Setter Property="Visibility" Value="Collapsed" />
-                        </Style>
-                    </ListView.Resources>-->
                     <ListView.View>
                         <GridView>
+                            <GridViewColumn
+                              Header="Índice"
+                              DisplayMemberBinding="{Binding Path=Order, Converter={StaticResource IndexConverter}}" />
                             <GridViewColumn Header="Tipo" DisplayMemberBinding="{Binding Path=Type, Converter={StaticResource QuestionTypeConverter}}"/>
                             <GridViewColumn Header="Pergunta" DisplayMemberBinding="{Binding Question}"/>
                         </GridView>

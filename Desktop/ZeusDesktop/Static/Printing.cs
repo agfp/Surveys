@@ -54,7 +54,7 @@ namespace ZeusDesktop
             doc.Blocks.Add(p);
             p.SetResourceReference(Control.StyleProperty, "Question");
 
-            p.Inlines.Add(new Bold(new Run(number + ") " + question.Question + "\n")));
+            p.Inlines.Add(new Bold(new Run(number + ") " + question.Question + Environment.NewLine)));
 
             if (question.Type == 1)
             {
@@ -82,10 +82,7 @@ namespace ZeusDesktop
 
                 if (question.Type == 4)
                 {
-                    p.Inlines.Add("\n");
-                    //var radiobutton = new InlineUIContainer() { Child = new RadioButton() { Margin = new Thickness(0, 0, 0, -2) } };
-                    //p.Inlines.Add(radiobutton);
-                    //p.Inlines.Add(" Outro. Especificar: ");
+                    p.Inlines.Add(Environment.NewLine);
                     AddTextbox(p);
                 }
             }
@@ -100,13 +97,13 @@ namespace ZeusDesktop
                 p.Inlines.Add(new Italic(new Run(instruction2)));
                 p.Inlines.Add(")");
             }
-            p.Inlines.Add(":\n");
+            p.Inlines.Add(":" + Environment.NewLine);
         }
 
         private static void AddTextbox(Paragraph p)
         {
             InlineUIContainer textbox = new InlineUIContainer();
-            textbox.Child = new TextBox() { Width = 200, HorizontalAlignment = HorizontalAlignment.Left /*, Margin = new Thickness(0, 0, 0, -8)*/ };
+            textbox.Child = new TextBox() { Width = 250, HorizontalAlignment = HorizontalAlignment.Left /*, Margin = new Thickness(0, 0, 0, -8)*/ };
             p.Inlines.Add(textbox);
         }
 
@@ -118,7 +115,7 @@ namespace ZeusDesktop
             {
                 if (i != 0)
                 {
-                    p.Inlines.Add("\n");
+                    p.Inlines.Add(Environment.NewLine);
                 }
                 var control = new InlineUIContainer() { Child = optionControl() };
                 p.Inlines.Add(control);

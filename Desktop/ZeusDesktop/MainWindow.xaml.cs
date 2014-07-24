@@ -106,7 +106,7 @@ namespace ZeusDesktop
             txtInterviewerId.Focus();
             grpInterviewers.Header = "Adicionar aplicador";
             grdInterviewer.Background = new SolidColorBrush(Color.FromRgb(128, 128, 128));
-            
+
 
             borderInterview.BorderThickness = new Thickness(2);
             borderInterview.CornerRadius = new CornerRadius(5);
@@ -114,9 +114,25 @@ namespace ZeusDesktop
 
         private void btnDeleteInterviewer_Click(object sender, RoutedEventArgs e)
         {
-            if (lvInterviewers.SelectedItem != null)
+            if (lvInterviewers.SelectedItems.Count > 1)
+            {
+                var message = String.Format("Tem certeza que deseja excluir {0} items?", lvInterviewers.SelectedItems.Count);
+                var response = MessageBox.Show(message, "Confirmação", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                if (response == MessageBoxResult.Yes)
+                {
+                    for (int i = lvInterviewers.SelectedItems.Count - 1; i >= 0; i--)
+                    {
+                        _interviewers.Remove((Interviewers)lvInterviewers.SelectedItems[i]);
+                    }
+                }
+            }
+            else if (lvInterviewers.SelectedItem != null)
             {
                 _interviewers.Remove((Interviewers)lvInterviewers.SelectedItem);
+            }
+            else
+            {
+                MessageBox.Show("Selecione um item para ser excluído", "Aviso", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
 
@@ -156,14 +172,43 @@ namespace ZeusDesktop
 
         private void btnEditQuestion_Click(object sender, RoutedEventArgs e)
         {
-            EditQuestion();
+            if (lvQuestions.SelectedItems.Count == 1)
+            {
+                EditQuestion();
+            }
+            else if (lvQuestions.SelectedItems.Count > 1)
+            {
+                MessageBox.Show("Selecione apenas um item para edição", "Aviso", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            else
+            {
+                MessageBox.Show("Selecione um item para ser edição", "Aviso", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
         }
 
         private void btnDeleteQuestion_Click(object sender, RoutedEventArgs e)
         {
-            if (lvQuestions.SelectedItem != null)
+            if (lvQuestions.SelectedItems.Count > 1)
+            {
+                var message = String.Format("Tem certeza que deseja excluir {0} items?", lvQuestions.SelectedItems.Count);
+                var response = MessageBox.Show(message, "Confirmação", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                if (response == MessageBoxResult.Yes)
+                {
+                    for (int i = lvQuestions.SelectedItems.Count - 1; i >= 0; i--)
+                    {
+                        _questions.Remove(lvQuestions.SelectedItems[i] as Questions);
+                    }
+                }
+                UpdateQuestionsOrder();
+            }
+            else if (lvQuestions.SelectedItem != null)
             {
                 _questions.Remove((Questions)lvQuestions.SelectedItem);
+                UpdateQuestionsOrder();
+            }
+            else
+            {
+                MessageBox.Show("Selecione um item para ser excluído", "Aviso", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
 
@@ -171,6 +216,7 @@ namespace ZeusDesktop
         {
             if (lvQuestions.SelectedItems.Count == 0)
             {
+                MessageBox.Show("Selecione pelo menos um item para ser movido", "Aviso", MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
 
@@ -196,12 +242,14 @@ namespace ZeusDesktop
             {
                 ScrollQuestionsTo(first);
             }
+            UpdateQuestionsOrder();
         }
 
         private void btnMoveDown_Click(object sender, RoutedEventArgs e)
         {
             if (lvQuestions.SelectedItems.Count == 0)
             {
+                MessageBox.Show("Selecione pelo menos um item para ser movido", "Aviso", MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
 
@@ -233,6 +281,7 @@ namespace ZeusDesktop
             {
                 ScrollQuestionsTo(last);
             }
+            UpdateQuestionsOrder();
         }
 
         #endregion
@@ -241,35 +290,65 @@ namespace ZeusDesktop
 
         private void menuNew_Click(object sender, RoutedEventArgs e)
         {
-            var result = MessageBox.Show("Deseja criar um novo questionário?", "Pergunta", MessageBoxButton.YesNo, MessageBoxImage.Question);
-            if (result == MessageBoxResult.Yes)
+            if (_savePending)
             {
-                _filename = null;
-                SetWindowTitle();
-                txtSurveyDescription.Text = String.Empty;
-                txtSurveyName.Text = String.Empty;
-                txtInterviewerId.Text = String.Empty;
-                txtInterviewerName.Text = String.Empty;
-                _questions = new ObservableCollection<Questions>();
-                _questions.CollectionChanged += new System.Collections.Specialized.NotifyCollectionChangedEventHandler(_questions_CollectionChanged);
-                _interviewers = new ObservableCollection<Interviewers>();
-                _interviewers.CollectionChanged += new System.Collections.Specialized.NotifyCollectionChangedEventHandler(_interviewers_CollectionChanged);
-                lvInterviewers.ItemsSource = _interviewers;
-                lvQuestions.ItemsSource = _questions;
-                SetViewMode(ViewMode.Edit);
-                SetSavePending(false);
+                var result = MessageBox.Show("Deseja salvar as alterações do questionário atual?", "Pergunta", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
+                if (result == MessageBoxResult.Yes)
+                {
+                    menuSave_Click(null, null);
+                    if (_savePending)
+                    {
+                        return;
+                    }
+                }
+                else if (result == MessageBoxResult.Cancel)
+                {
+                    return;
+                }
             }
+            _filename = null;
+            SetWindowTitle();
+            txtSurveyDescription.Text = String.Empty;
+            txtSurveyName.Text = String.Empty;
+            txtInterviewerId.Text = String.Empty;
+            txtInterviewerName.Text = String.Empty;
+            _questions = new ObservableCollection<Questions>();
+            _questions.CollectionChanged += new System.Collections.Specialized.NotifyCollectionChangedEventHandler(_questions_CollectionChanged);
+            _interviewers = new ObservableCollection<Interviewers>();
+            _interviewers.CollectionChanged += new System.Collections.Specialized.NotifyCollectionChangedEventHandler(_interviewers_CollectionChanged);
+            lvInterviewers.ItemsSource = _interviewers;
+            lvQuestions.ItemsSource = _questions;
+            SetViewMode(ViewMode.Edit);
+            SetSavePending(false);
+            grpQuestions.Header = "Perguntas";
         }
 
         private void menuOpen_Click(object sender, RoutedEventArgs e)
         {
+            if (_savePending)
+            {
+                var result = MessageBox.Show("Deseja salvar as alterações do questionário atual?", "Pergunta", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
+                if (result == MessageBoxResult.Yes)
+                {
+                    menuSave_Click(null, null);
+                    if (_savePending)
+                    {
+                        return;
+                    }
+                }
+                else if (result == MessageBoxResult.Cancel)
+                {
+                    return;
+                }
+            }
+
             OpenFileDialog dlg = new OpenFileDialog();
             dlg.InitialDirectory = Path.Combine(System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Zeus");
             dlg.DefaultExt = ".zeus";
             dlg.Filter = "Questionários (.zeus)|*.zeus";
 
-            bool? result = dlg.ShowDialog();
-            if (result == true)
+            bool? result2 = dlg.ShowDialog();
+            if (result2 == true)
             {
                 Open(dlg.FileName);
             }
@@ -382,8 +461,9 @@ namespace ZeusDesktop
         private void lvQuestions_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             var grid = lvQuestions.View as GridView;
-            grid.Columns[0].Width = 70;
-            grid.Columns[1].Width = lvQuestions.ActualWidth - 100;
+            grid.Columns[0].Width = 50;
+            grid.Columns[1].Width = 80;
+            grid.Columns[2].Width = lvQuestions.ActualWidth - 160;
         }
 
         private void lvInterviewers_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -395,14 +475,19 @@ namespace ZeusDesktop
 
         private void ucQuestion_AddQuestion(object sender, QuestionEventArgs e)
         {
+            e.Question.Order = _questions.Count;
             _questions.Add(e.Question);
+            ScrollQuestionsTo(Int32.MaxValue);
+            lvQuestions.SelectedItem = e.Question;
         }
 
         private void ucQuestion_EditQuestion(object sender, QuestionEventArgs e)
         {
             var index = lvQuestions.SelectedIndex;
+            e.Question.Order = index;
             _questions.RemoveAt(index);
             _questions.Insert(index, e.Question);
+            lvQuestions.SelectedItem = e.Question;
         }
 
         private void lvQuestions_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -418,9 +503,23 @@ namespace ZeusDesktop
                 if (result == MessageBoxResult.Yes)
                 {
                     menuSave_Click(null, null);
-                    e.Cancel = true;
+                    if (_savePending)
+                    {
+                        e.Cancel = true;
+                    }
                 }
             }
+        }
+
+        void _questions_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            SetSavePending(true);
+            grpQuestions.Header = String.Format("Perguntas ({0})", _questions.Count);
+        }
+
+        void _interviewers_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            SetSavePending(true);
         }
 
         #endregion
@@ -536,7 +635,7 @@ namespace ZeusDesktop
 
         #endregion
 
-        #region IO methods
+        #region Other methods
 
         private bool Validate()
         {
@@ -596,17 +695,8 @@ namespace ZeusDesktop
                     Description = txtSurveyDescription.Text
                 };
                 db.SurveyInfo.InsertOnSubmit(info);
-                foreach (var interviewer in _interviewers)
-                {
-                    db.Interviewers.InsertOnSubmit(interviewer);
-                }
-                for (int i = 0; i < lvQuestions.Items.Count; i++)
-                {
-                    var question = lvQuestions.Items[i] as Questions;
-
-                    question.Order = i;
-                    db.Questions.InsertOnSubmit(question);
-                }
+                db.Interviewers.InsertAllOnSubmit(_interviewers);
+                db.Questions.InsertAllOnSubmit(_questions);
                 db.SubmitChanges();
             }
         }
@@ -662,15 +752,12 @@ namespace ZeusDesktop
             }
         }
 
-        void _questions_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        private void UpdateQuestionsOrder()
         {
-            SetSavePending(true);
-            grpQuestions.Header = String.Format("Perguntas ({0})", _questions.Count);
-        }
-
-        void _interviewers_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-            SetSavePending(true);
+            for (int i = 0; i < _questions.Count; i++)
+            {
+                _questions[i].Order = i;
+            }
         }
 
         #endregion

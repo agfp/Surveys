@@ -18,8 +18,8 @@ namespace ZeusDesktop
         public UCQuestion()
         {
             InitializeComponent();
-            Storyboard sb4 = this.FindResource("Storyboard4") as Storyboard;
-            sb4.Begin();
+            Storyboard sb0 = this.FindResource("Storyboard0") as Storyboard;
+            sb0.Begin();
         }
 
         public UCQuestion(Questions question)
@@ -35,16 +35,18 @@ namespace ZeusDesktop
             }
             else
             {
-                if (question.Type == 2 || question.Type == 3)
-                {
-                    cbbType.SelectedIndex = 1;
-                    txtNumAnswers.Text = question.NumAnswers.ToString();
-                }
-                else if (question.Type == 4)
+                if (question.Type == 2)
                 {
                     cbbType.SelectedIndex = 2;
                 }
-
+                else if (question.Type == 3)
+                {
+                    cbbType.SelectedIndex = 1;
+                }
+                else if (question.Type == 4)
+                {
+                    cbbType.SelectedIndex = 3;
+                }
                 var options = new StringBuilder();
                 foreach (var o in question.Options)
                 {
@@ -63,17 +65,23 @@ namespace ZeusDesktop
                     sb1.Begin();
                     break;
 
-                case "Fechada":
+                case "Fechada - Resposta única":
                     Storyboard sb2 = this.FindResource("Storyboard2") as Storyboard;
                     sb2.Begin();
                     break;
 
-                case "Mista":
+                case "Fechada - Respostas múltiplas":
                     Storyboard sb3 = this.FindResource("Storyboard3") as Storyboard;
                     sb3.Begin();
                     break;
+
+                case "Mista":
+                    Storyboard sb4 = this.FindResource("Storyboard4") as Storyboard;
+                    sb4.Begin();
+                    break;
             }
             txtQuestion.Focus();
+            txtQuestion.CaretIndex = txtQuestion.Text.Length;
         }
 
         private void btnCancel_Click(object sender, RoutedEventArgs e)
@@ -89,7 +97,7 @@ namespace ZeusDesktop
                 {
                     Question = txtQuestion.Text.Trim(),
                     Instruction = txtInstruction.Text.Trim(),
-                    NumAnswers = 1,
+                    NumAnswers = 1
                 };
 
                 if (((ComboBoxItem)cbbType.SelectedValue).Content.ToString() != "Aberta")
@@ -114,12 +122,12 @@ namespace ZeusDesktop
                 {
                     q.Type = 1;
                 }
-                else if (((ComboBoxItem)cbbType.SelectedValue).Content.ToString() == "Fechada" && Convert.ToInt32(txtNumAnswers.Text) > 1)
+                else if (((ComboBoxItem)cbbType.SelectedValue).Content.ToString() == "Fechada - Respostas múltiplas")
                 {
                     q.Type = 2;
-                    q.NumAnswers = Convert.ToInt32(txtNumAnswers.Text);
+                    q.NumAnswers = q.Options.Count;
                 }
-                else if (((ComboBoxItem)cbbType.SelectedValue).Content.ToString() == "Fechada")
+                else if (((ComboBoxItem)cbbType.SelectedValue).Content.ToString() == "Fechada - Resposta única")
                 {
                     q.Type = 3;
                 }
@@ -161,21 +169,6 @@ namespace ZeusDesktop
                 if (optionsList.Count < 2)
                 {
                     MessageBox.Show("Inclua pelo menos duas opções", "Aviso", MessageBoxButton.OK, MessageBoxImage.Exclamation);
-                    return false;
-                }
-            }
-            if (((ComboBoxItem)cbbType.SelectedValue).Content.ToString() == "Fechada")
-            {
-                int numAnswers;
-                if (!Int32.TryParse(txtNumAnswers.Text, out numAnswers))
-                {
-                    MessageBox.Show("Digite o número de opções que o usuário pode escolher", "Aviso", MessageBoxButton.OK, MessageBoxImage.Exclamation);
-                    return false;
-                }
-                if (numAnswers < 1 || numAnswers > optionsList.Count)
-                {
-                    var message = String.Format("Você pediu {0} resposta(s), mas criou apenas {1} opções. Crie pelo menos {0} opções.", txtNumAnswers.Text, optionsList.Count);
-                    MessageBox.Show(message, "Aviso", MessageBoxButton.OK, MessageBoxImage.Exclamation);
                     return false;
                 }
             }
